@@ -1,6 +1,12 @@
+import java.util.Random;
+
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
@@ -13,17 +19,22 @@ import javafx.stage.Stage;
  */
 public class AssignmentTemplate extends Application {
 	
-	/**
-	 * The main method used to run the application.
-	 * @param args
-	 */
 	public static void main(String[] args) {
 			launch(args);
 	}
 
-	private Scene scene; // The scene for the application.
-	private TabPane root; // The TabPane for the application to allow multiple tabs.
-	private Tab tab1, tab2; // The tabs for the TabPane.
+	private Stage stage;
+	private MenuBar menuBar;
+	private Scene scene; 
+	private TabPane root; 
+	private Tab tab1, tab2;
+	private EventHandler<ActionEvent> aEventHandler = new EventHandler<ActionEvent>() {
+		@Override
+		public void handle(ActionEvent event) {
+			
+			
+		}
+	};
 
 	/**
 	 * Concrete implementation of the start method from the Application class
@@ -36,28 +47,35 @@ public class AssignmentTemplate extends Application {
 	    scene = new Scene(root, 800, 600);
 	  	stage.setScene(scene);
 	  	// The panes to store the content for each tab.
-	  	Pane tab1Pane = new Pane();
+	  	Pane tab1Content = new Pane();
 	  	Pane tab2Pane = new Pane();
-//	  	Button button = new Button();
-//	  	button.setText("Test");
-//	  	tab1Pane.getChildren().add(button);
-	  	
+	  	menuBar = new MenuBar();
+	  	Menu pauseMenu = new Menu();
+	  	pauseMenu.setText("Test");
+	  	Menu fullScreenMenu = new Menu();
+	  	fullScreenMenu.setText("Full Screen");
+	  	fullScreenMenu.setOnAction(aEventHandler);
+	  	Menu settingsMenu = new Menu();
+	  	settingsMenu.setText("Settings");
+	  	menuBar.getMenus().addAll(pauseMenu, fullScreenMenu, settingsMenu);
+	  	menuBar.setPrefWidth(800);
+	  	tab1Content.getChildren().add(menuBar);
 	  	// Instantiates the first tab and makes it so that the tab cannot be closed.
 	  	tab1 = new Tab();
-	  	tab1.setText("First Tab");
+	  	tab1.setText("Play");
 	  	tab1.setClosable(false);
-	  	tab1.setContent(tab1Pane); // Sets the content for this tab as the content from tab1Pane.
-	  	tab1Pane.setStyle("-fx-background-color: #000000"); // Sets the background of the content area to black.
+	  	tab1.setContent(tab1Content); // Sets the content for this tab as the content from tab1Pane.
+	  	tab1Content.setStyle("-fx-background-color: #000000"); // Sets the background of the content area to black.
 	  	root.getTabs().add(tab1); // Adds the tab to the TabPane.
 	  	
 	  	// This process is repeated for the second tab.
 	  	tab2 = new Tab();
-	  	tab2.setText("Second Tab");
+	  	tab2.setText("High Scores");
 	  	tab2.setClosable(false);
 	  	tab2.setContent(tab2Pane);
 	  	root.getTabs().add(tab2);
 	  	
-	  	
-	  	stage.show();
+	  	stage.setResizable(false);
+		stage.show();
 	}
 }
