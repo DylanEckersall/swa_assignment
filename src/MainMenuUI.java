@@ -6,7 +6,7 @@ import javafx.scene.layout.Pane;
  * @author Dylan
  *
  */
-public class MainMenu {
+public class MainMenuUI {
 
   	private Button playButton;
   	private Button helpButton;
@@ -16,7 +16,7 @@ public class MainMenu {
   	/**
   	 * Constructor for the main menu - builds the main menu screen.
   	 */
-  	public MainMenu() {
+  	public MainMenuUI() {
   		// Instantiates the buttons on the main menu.
 		playButton = new Button("Play Game");
 		helpButton = new Button("Instructions");
@@ -29,13 +29,13 @@ public class MainMenu {
 	  	playButton.setLayoutX(300);
 	  	helpButton.setLayoutX(300);
 	  	quitButton.setLayoutX(300);
-	  	playButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 30px; -fx-cursor: hand");
+	  	playButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 20px; -fx-cursor: hand");
 	  	playButton.setPrefHeight(100);
 	  	playButton.setPrefWidth(200);
-	  	helpButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 30px; -fx-cursor: hand");
+	  	helpButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 20px; -fx-cursor: hand");
 	  	helpButton.setPrefHeight(100);
 	  	helpButton.setPrefWidth(200);
-	  	quitButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 30px; -fx-cursor: hand");
+	  	quitButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 20px; -fx-cursor: hand");
 	  	quitButton.setPrefHeight(100);
 	  	quitButton.setPrefWidth(200);
 		// Adds the buttons to the main menu pane.

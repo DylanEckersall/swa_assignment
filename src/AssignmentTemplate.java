@@ -61,26 +61,28 @@ public class AssignmentTemplate extends Application {
 	  	stage.setScene(scene);
 	  	// The panes to store the content for each tab.
 	  	Pane tab2Content = new Pane();
-	  	// Positioning and styling for the buttons
-	  	// Creates the pane for the help screen.
-	  	Pane helpScreen = new Pane();
-	  	// Creates a default main menu object for the UI.
-	  	MainMenu mainMenu = new MainMenu();
-	  	Label test = new Label("Test");
-	  	test.setLayoutY(100);
-	  	helpScreen.getChildren().add(test);
-	  	// Implements the event handler for the quit button.
-	  	mainMenu.getQuitButton().setOnAction(new EventHandler<ActionEvent>() {
+	  	// Creates objects for all of the UI components.
+	  	MainMenuUI mainMenuUI = new MainMenuUI();
+	  	HelpScreenUI helpScreen = new HelpScreenUI();
+	  	// Implements the event handler for the quit button on the main menu.
+	  	mainMenuUI.getQuitButton().setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				System.exit(0);	
 			}
 		});
-	  	// Implements the event handler for the help button.
-	  	mainMenu.getHelpButton().setOnAction(new EventHandler<ActionEvent>() {
+	  	// Implements the event handler for the help button on the main menu.
+	  	mainMenuUI.getHelpButton().setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				tab1.setContent(helpScreen);	
+				tab1.setContent(helpScreen.getContent());	
+			}
+		});
+	  	// Implements the event handler for the main menu button on the help screen.
+	  	helpScreen.getMainMenuButton().setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				tab1.setContent(mainMenuUI.getContent());
 			}
 		});
 	  	menuBar = new MenuBar();
@@ -92,12 +94,12 @@ public class AssignmentTemplate extends Application {
 	  	menu.getItems().add(fullScreen);
 	  	menuBar.getMenus().addAll(menu);
 	  	menuBar.setPrefWidth(800);
-	  	mainMenu.getContent().getChildren().add(menuBar);
+	  	mainMenuUI.getContent().getChildren().add(menuBar);
 	  	// Instantiates the first tab and makes it so that the tab cannot be closed.
 	  	tab1 = new Tab();
 	  	tab1.setText("Play");
-	  	tab1.setClosable(false);
-	  	tab1.setContent(mainMenu.getContent()); // Sets the content for this tab as the content from tab1Pane.
+	  	tab1.setClosable(false); 
+	  	tab1.setContent(mainMenuUI.getContent()); // Sets the content for this tab as the content from tab1Pane.
 	  	root.getTabs().add(tab1); // Adds the tab to the TabPane.
 	  	// This process is repeated for the second tab.
 	  	tab2 = new Tab();
