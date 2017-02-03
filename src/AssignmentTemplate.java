@@ -1,3 +1,6 @@
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -32,8 +35,16 @@ public class AssignmentTemplate extends Application {
 	private EventHandler<ActionEvent> aEventHandler = new EventHandler<ActionEvent>() {
 		@Override
 		public void handle(ActionEvent event) {
-			System.out.println(event.toString());
-//			stage.setFullScreen(true);
+			Dimension dimensions = Toolkit.getDefaultToolkit().getScreenSize();
+			double height = dimensions.getHeight();
+			double width = dimensions.getWidth();
+			stage.setFullScreenExitHint("Press ESC to exit full screen.");
+			stage.setFullScreen(true);
+			stage.setX(0);
+			stage.setY(0);
+			stage.setHeight(height);
+			stage.setWidth(width);
+			menuBar.setPrefWidth(width);
 		}
 	};
 
@@ -49,43 +60,24 @@ public class AssignmentTemplate extends Application {
 	    scene = new Scene(root, 800, 600);
 	  	stage.setScene(scene);
 	  	// The panes to store the content for each tab.
-	  	Pane mainMenu = new Pane();
 	  	Pane tab2Content = new Pane();
-	  	// Creates 3 buttons and adds them to the tab1Content pane.
-	  	Button playButton = new Button("Play Game");
-	  	Button helpButton = new Button("Help");
-	  	Button quitButton = new Button("Quit");
-	  	mainMenu.getChildren().addAll(playButton, helpButton, quitButton);
 	  	// Positioning and styling for the buttons
-	  	playButton.setLayoutY(100);
-	  	helpButton.setLayoutY(250);
-	  	quitButton.setLayoutY(400);
-	  	playButton.setLayoutX(300);
-	  	helpButton.setLayoutX(300);
-	  	quitButton.setLayoutX(300);
-	  	playButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 30px; -fx-cursor: hand");
-	  	playButton.setPrefHeight(100);
-	  	playButton.setPrefWidth(200);
-	  	helpButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 30px; -fx-cursor: hand");
-	  	helpButton.setPrefHeight(100);
-	  	helpButton.setPrefWidth(200);
-	  	quitButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 30px; -fx-cursor: hand");
-	  	quitButton.setPrefHeight(100);
-	  	quitButton.setPrefWidth(200);
 	  	// Creates the pane for the help screen.
 	  	Pane helpScreen = new Pane();
+	  	// Creates a default main menu object for the UI.
+	  	MainMenu mainMenu = new MainMenu();
 	  	Label test = new Label("Test");
 	  	test.setLayoutY(100);
 	  	helpScreen.getChildren().add(test);
 	  	// Implements the event handler for the quit button.
-	  	quitButton.setOnAction(new EventHandler<ActionEvent>() {
+	  	mainMenu.getQuitButton().setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				System.exit(0);	
 			}
 		});
 	  	// Implements the event handler for the help button.
-	  	helpButton.setOnAction(new EventHandler<ActionEvent>() {
+	  	mainMenu.getHelpButton().setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				tab1.setContent(helpScreen);	
@@ -100,15 +92,13 @@ public class AssignmentTemplate extends Application {
 	  	menu.getItems().add(fullScreen);
 	  	menuBar.getMenus().addAll(menu);
 	  	menuBar.setPrefWidth(800);
-	  	mainMenu.getChildren().add(menuBar);
+	  	mainMenu.getContent().getChildren().add(menuBar);
 	  	// Instantiates the first tab and makes it so that the tab cannot be closed.
 	  	tab1 = new Tab();
 	  	tab1.setText("Play");
 	  	tab1.setClosable(false);
-	  	tab1.setContent(mainMenu); // Sets the content for this tab as the content from tab1Pane.
-	  	mainMenu.setStyle("-fx-background-color: #000000"); // Sets the background of the content area to black.
+	  	tab1.setContent(mainMenu.getContent()); // Sets the content for this tab as the content from tab1Pane.
 	  	root.getTabs().add(tab1); // Adds the tab to the TabPane.
-	  	
 	  	// This process is repeated for the second tab.
 	  	tab2 = new Tab();
 	  	tab2.setText("High Scores");
