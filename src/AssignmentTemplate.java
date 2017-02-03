@@ -31,22 +31,6 @@ public class AssignmentTemplate extends Application {
 	private Scene scene; 
 	private TabPane root; 
 	private Tab tab1, tab2;
-	// Declares and instantiates the event handler for all action events. 
-	private EventHandler<ActionEvent> aEventHandler = new EventHandler<ActionEvent>() {
-		@Override
-		public void handle(ActionEvent event) {
-			Dimension dimensions = Toolkit.getDefaultToolkit().getScreenSize();
-			double height = dimensions.getHeight();
-			double width = dimensions.getWidth();
-			stage.setFullScreenExitHint("Press ESC to exit full screen.");
-			stage.setFullScreen(true);
-			stage.setX(0);
-			stage.setY(0);
-			stage.setHeight(height);
-			stage.setWidth(width);
-			menuBar.setPrefWidth(width);
-		}
-	};
 
 	/**
 	 * Concrete implementation of the start method from the Application class
