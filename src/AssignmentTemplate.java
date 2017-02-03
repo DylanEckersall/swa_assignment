@@ -55,15 +55,17 @@ public class AssignmentTemplate extends Application {
 	public void start(Stage stage) throws Exception {
 		this.stage = stage;
 	  	stage.setTitle("Software Architectures – Dylan Eckersall"); // Sets the title of the window.
+	  	
 	  	// Declares and instantiates the content area for the application.
 	  	root = new TabPane();
 	    scene = new Scene(root, 800, 600);
 	  	stage.setScene(scene);
-	  	// The panes to store the content for each tab.
-	  	Pane tab2Content = new Pane();
+	  	
 	  	// Creates objects for all of the UI components.
 	  	MainMenuUI mainMenuUI = new MainMenuUI();
 	  	HelpScreenUI helpScreen = new HelpScreenUI();
+	  	GameUI gameUI = new GameUI();
+	  	
 	  	// Implements the event handler for the quit button on the main menu.
 	  	mainMenuUI.getQuitButton().setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -71,6 +73,7 @@ public class AssignmentTemplate extends Application {
 				System.exit(0);	
 			}
 		});
+	  	
 	  	// Implements the event handler for the help button on the main menu.
 	  	mainMenuUI.getHelpButton().setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -78,6 +81,15 @@ public class AssignmentTemplate extends Application {
 				tab1.setContent(helpScreen.getContent());	
 			}
 		});
+	  	
+	  	// Implements the event handler for the play game button on the main menu.
+	  	mainMenuUI.getPlayButton().setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				tab1.setContent(gameUI.getContent());
+			}
+		});
+	  	
 	  	// Implements the event handler for the main menu button on the help screen.
 	  	helpScreen.getMainMenuButton().setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -85,27 +97,20 @@ public class AssignmentTemplate extends Application {
 				tab1.setContent(mainMenuUI.getContent());
 			}
 		});
-	  	menuBar = new MenuBar();
-	  	Menu menu = new Menu();
-	  	menu.setText("Options");
-	  	MenuItem fullScreen = new MenuItem();
-	  	fullScreen.setText("Enter full screen..");
-	  	fullScreen.setOnAction(aEventHandler);
-	  	menu.getItems().add(fullScreen);
-	  	menuBar.getMenus().addAll(menu);
-	  	menuBar.setPrefWidth(800);
-	  	mainMenuUI.getContent().getChildren().add(menuBar);
+	  	
 	  	// Instantiates the first tab and makes it so that the tab cannot be closed.
 	  	tab1 = new Tab();
 	  	tab1.setText("Play");
 	  	tab1.setClosable(false); 
-	  	tab1.setContent(mainMenuUI.getContent()); // Sets the content for this tab as the content from tab1Pane.
-	  	root.getTabs().add(tab1); // Adds the tab to the TabPane.
+	  	// Sets the content for this tab as the content from tab1Pane.
+	  	tab1.setContent(mainMenuUI.getContent());
+	  	// Adds the tab to the TabPane.
+	  	root.getTabs().add(tab1);
 	  	// This process is repeated for the second tab.
 	  	tab2 = new Tab();
 	  	tab2.setText("High Scores");
 	  	tab2.setClosable(false);
-	  	tab2.setContent(tab2Content);
+//	  	tab2.setContent();
 	  	root.getTabs().add(tab2);
 	  	
 	  	stage.setResizable(false);
