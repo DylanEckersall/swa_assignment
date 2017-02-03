@@ -1,5 +1,7 @@
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 /**
  * Class for the help screen UI.
@@ -8,8 +10,9 @@ import javafx.scene.layout.Pane;
  */
 public class HelpScreenUI {
 
-  	Pane content;
-  	Button mainMenuButton;
+  	private Pane content;
+  	private Button mainMenuButton;
+  	private Text instructions;
   	
   	/**
   	 * Constructor for the help screen UI - builds the help screen.
@@ -21,9 +24,15 @@ public class HelpScreenUI {
 		mainMenuButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 20px; -fx-cursor: hand");
 		mainMenuButton.setLayoutY(15);
 		mainMenuButton.setLayoutX(15);
-	  	mainMenuButton.setPrefHeight(100);
-	  	mainMenuButton.setPrefWidth(200);
-	  	content.getChildren().addAll(mainMenuButton);
+	  	mainMenuButton.setPrefHeight(75);
+	  	mainMenuButton.setPrefWidth(175);
+	  	instructions = new Text();
+	  	instructions.setStyle("-fx-font-size: 20px");
+	  	instructions.setText("1. Click \"Play Game\" on the main menu. \n2.");
+	  	instructions.setFill(Color.WHITE);
+	  	instructions.setX(400);
+	  	instructions.setY(100);
+	  	content.getChildren().addAll(mainMenuButton, instructions);
 	}
 
 	/**
