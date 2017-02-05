@@ -4,7 +4,6 @@ public class AdditionNumberProbelm extends NumberProblem {
 	@Override
 	public void easyNumberProblem() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
