@@ -27,7 +27,6 @@ public class GameUI {
 	private Button startButton;
 	private Button pauseButton;
 	private Button settingsButton;
-	private Rectangle rectangle;
 	private String difficulty;
 	private Label test;
 	private Timeline timeline;

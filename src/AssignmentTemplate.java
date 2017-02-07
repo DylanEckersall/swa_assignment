@@ -1,5 +1,3 @@
-import com.sun.org.apache.xpath.internal.operations.Div;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -42,6 +40,8 @@ public class AssignmentTemplate extends Application {
 	  	root = new TabPane();
 	    scene = new Scene(root, 800, 600);
 	  	stage.setScene(scene);
+	  	
+		String background = AssignmentTemplate.class.getResource("resources/background.jpg").toExternalForm();
 	  	
 	  	// Creates objects for all of the UI components.
 	  	MainMenuUI mainMenuUI = new MainMenuUI();
