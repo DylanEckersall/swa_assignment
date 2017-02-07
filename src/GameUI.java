@@ -3,11 +3,18 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -30,12 +37,38 @@ public class GameUI {
 	private String difficulty;
 	private Label test;
 	private Timeline timeline;
-	private int x;
+	private boolean isPaused;
+	private double x;
+	private NumberCatcher numberCatcher;
+	private EventHandler<KeyEvent> kEventHandler = new EventHandler<KeyEvent>() {
+		public void handle(KeyEvent event) {
+			if (!isPaused) {
+				if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.A) {
+					numberCatcher.setX(x - 15);
+					x -= 10;
+				}
+				if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.D) {
+					numberCatcher.setX(x + 15);
+					x += 10;
+				} 
+			}
+			if (event.getCode() == KeyCode.P) {
+				if (isPaused == false) {
+					pauseGame();
+				}
+				else {
+					resumeGame();
+				}
+
+			}
+		}
+	};
 
 	/**
 	 * Constructor for the game UI - builds the screen for the gameplay.
 	 */
 	public GameUI(String difficulty) {
+		isPaused = false;
 		this.difficulty = difficulty;
 		content = new Pane();
 		toolBar = new ToolBar();
@@ -49,26 +82,12 @@ public class GameUI {
 		content.getChildren().addAll(toolBar);
 		test = new Label("Test");
 		test.setStyle("-fx-font-size: 20px");
-		Rectangle rectangle = new Rectangle();
-		rectangle.setFill(Color.RED);
-		rectangle.setWidth(100);
-		rectangle.setHeight(50);
-		rectangle.setX(340);
-		rectangle.setY(500);
-		x = 340;
-		content.getChildren().add(rectangle);
-		content.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.A) {
-					rectangle.setX(x - 15);
-					x -= 10;
-				}
-				else if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.D) {
-					rectangle.setX(x + 15);
-					x += 10;
-				}
-			}
-		});
+		numberCatcher = NumberCatcher.getInstance();
+		numberCatcher.setFitWidth(50);
+		numberCatcher.setFitHeight(50);
+		x = numberCatcher.getX();
+		content.getChildren().add(numberCatcher);
+		content.setOnKeyPressed(kEventHandler);
 		content.getChildren().addAll(test);
 		timeline = new Timeline();
 		timeline.setCycleCount(timeline.INDEFINITE);
@@ -78,19 +97,15 @@ public class GameUI {
 		timeline.getKeyFrames().add(keyFrame);
 		timeline.play();
 		content.requestFocus();
+		content.setFocusTraversable(false);
 		pauseButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				timeline.pause();
-				startButton.setDisable(false);
-				pauseButton.setDisable(true);
-				content.setOnKeyPressed(null);
+				pauseGame();
 			}
 		});
 		startButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				timeline.play();
-				pauseButton.setDisable(false);
-				startButton.setDisable(true);
+				resumeGame();
 			}
 		});
 		AdditionNumberProblem additionNumberProblem= new AdditionNumberProblem();
@@ -111,6 +126,27 @@ public class GameUI {
 	 */
 	public void setContent(Pane content) {
 		this.content = content;
+	}
+	
+	/**
+	 * Pauses the game.
+	 */
+	public void pauseGame() {
+		timeline.pause();
+		startButton.setDisable(false);
+		pauseButton.setDisable(true);
+		isPaused = true;
+	}
+	
+	/**
+	 * Resumes the game.
+	 */
+	public void resumeGame() {
+		timeline.play();
+		pauseButton.setDisable(false);
+		startButton.setDisable(true);
+		content.setOnKeyPressed(kEventHandler);
+		isPaused = false;
 	}
 	
 	

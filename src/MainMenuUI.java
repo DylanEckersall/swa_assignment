@@ -29,6 +29,13 @@ public class MainMenuUI {
 		helpButton = new Button("Instructions");
 		quitButton = new Button("Quit");
 		content = new Pane();
+		// Creates and adds a new background image to the main menu screen.
+		Image image = new Image(GameUI.class.getResource("resources/background.jpg").toExternalForm());
+		BackgroundPosition backgroundPosition = new BackgroundPosition(Side.LEFT, 0, false, Side.TOP, 0, false);
+		BackgroundSize backgroundSize = new BackgroundSize(800, 600, false, false, true, true);
+		BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, backgroundPosition, backgroundSize);
+		Background background = new Background(backgroundImage);
+		content.setBackground(background);
 		// Styling and positioning for the buttons.
 	  	playButton.setLayoutY(100);
 	  	helpButton.setLayoutY(250);
@@ -47,8 +54,6 @@ public class MainMenuUI {
 	  	quitButton.setPrefWidth(200);
 		// Adds the buttons to the main menu pane.
 		content.getChildren().addAll(playButton, helpButton, quitButton);
-		// Sets the background of the content area to black.
-		content.setStyle("-fx-background-color: #000000");
 	}
 
 	/**
