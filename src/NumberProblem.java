@@ -1,3 +1,4 @@
+import java.util.Random;
 
 /**
  * Number problem abstract class declares common methods
@@ -9,12 +10,13 @@ public abstract class NumberProblem {
 	
 	private double answer;
 	private String problem;
+	private Random numberGenerator;
 	
 	/**
 	 * NumberProblem constructor - creates a NumberProblem object.
 	 */
 	public NumberProblem() {
-		
+		numberGenerator = new Random();
 	}
 	
 	/**
@@ -32,6 +34,14 @@ public abstract class NumberProblem {
 	public String getProblem() {
 		return problem;
 	}
+	
+	/**
+	 * Returns the number generator for the problem.
+	 * @return the numberGenerator
+	 */
+	public Random getNumberGenerator() {
+		return numberGenerator;
+	}
 
 	/**
 	 * Sets the answer to the number problem.
@@ -47,6 +57,14 @@ public abstract class NumberProblem {
 	 */
 	public void setProblem(String problem) {
 		this.problem = problem;
+	}
+
+	/**
+	 * Sets the number generator for the problem.
+	 * @param numberGenerator the numberGenerator to set
+	 */
+	public void setNumberGenerator(Random numberGenerator) {
+		this.numberGenerator = numberGenerator;
 	}
 
 	/**

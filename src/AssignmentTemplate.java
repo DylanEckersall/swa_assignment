@@ -1,18 +1,16 @@
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import com.sun.org.apache.xpath.internal.operations.Div;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 /**
@@ -48,7 +46,7 @@ public class AssignmentTemplate extends Application {
 	  	// Creates objects for all of the UI components.
 	  	MainMenuUI mainMenuUI = new MainMenuUI();
 	  	HelpScreenUI helpScreen = new HelpScreenUI();
-	  	GameUI gameUI = new GameUI();
+	  	GameUI gameUI = new GameUI("Test");
 	  	
 	  	// Implements the event handler for the quit button on the main menu.
 	  	mainMenuUI.getQuitButton().setOnAction(new EventHandler<ActionEvent>() {
@@ -96,6 +94,19 @@ public class AssignmentTemplate extends Application {
 	  	tab2.setClosable(false);
 //	  	tab2.setContent();
 	  	root.getTabs().add(tab2);
+	  	
+	  	DivisionNumberProblem additionNumberProbelm = new DivisionNumberProblem();
+	  	additionNumberProbelm.easyNumberProblem();
+	  	System.out.println("Problem = " + additionNumberProbelm.getProblem());
+	  	System.out.println("Answer = " + additionNumberProbelm.getAnswer());
+	  	System.out.println("==========================================");
+	  	additionNumberProbelm.mediumNumberProblem();
+	  	System.out.println("Answer = " + additionNumberProbelm.getAnswer());
+	  	System.out.println("Problem = " + additionNumberProbelm.getProblem());
+	  	System.out.println("==========================================");
+	  	additionNumberProbelm.hardNumberProblem();
+	  	System.out.println("Answer = " + additionNumberProbelm.getAnswer());
+	  	System.out.println("Problem = " + additionNumberProbelm.getProblem());
 	  	
 	  	stage.setResizable(false);
 		stage.show();
