@@ -68,7 +68,6 @@ public class GameUI {
 					rectangle.setX(x + 15);
 					x += 10;
 				}
-				
 			}
 		});
 		content.getChildren().addAll(test);
