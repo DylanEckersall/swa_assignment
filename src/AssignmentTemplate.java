@@ -1,5 +1,8 @@
+import com.sun.org.apache.xpath.internal.operations.Div;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
@@ -18,26 +21,24 @@ import javafx.stage.Stage;
  */
 public class AssignmentTemplate extends Application {
 	
-	public static void main(String[] args) {
-			launch(args);
-	}
-
-	private Stage stage;
-	private MenuBar menuBar;
 	private Scene scene; 
 	private TabPane root; 
 	private Tab tab1, tab2;
+	
+	public static void main(String[] args) {
+			launch(args);
+	}
 
 	/**
 	 * Concrete implementation of the start method from the Application class
 	 * @param stage 
 	 */
 	public void start(Stage stage) throws Exception {
-		this.stage = stage;
 	  	stage.setTitle("Software Architectures – Dylan Eckersall"); // Sets the title of the window.
 	  	
 	  	// Declares and instantiates the content area for the application.
 	  	root = new TabPane();
+	  	root.setFocusTraversable(false);
 	    scene = new Scene(root, 800, 600);
 	  	stage.setScene(scene);
 	  	
@@ -95,18 +96,12 @@ public class AssignmentTemplate extends Application {
 //	  	tab2.setContent();
 	  	root.getTabs().add(tab2);
 	  	
-	  	DivisionNumberProblem additionNumberProbelm = new DivisionNumberProblem();
-	  	additionNumberProbelm.easyNumberProblem();
-	  	System.out.println("Problem = " + additionNumberProbelm.getProblem());
-	  	System.out.println("Answer = " + additionNumberProbelm.getAnswer());
-	  	System.out.println("==========================================");
-	  	additionNumberProbelm.mediumNumberProblem();
-	  	System.out.println("Answer = " + additionNumberProbelm.getAnswer());
-	  	System.out.println("Problem = " + additionNumberProbelm.getProblem());
-	  	System.out.println("==========================================");
-	  	additionNumberProbelm.hardNumberProblem();
-	  	System.out.println("Answer = " + additionNumberProbelm.getAnswer());
-	  	System.out.println("Problem = " + additionNumberProbelm.getProblem());
+	  	DivisionNumberProblem divisionNumberProblem = new DivisionNumberProblem();
+	  	divisionNumberProblem.hardNumberProblem();
+	  	System.out.println(divisionNumberProblem.getProblem() + " = " + divisionNumberProblem.getAnswer());
+	  	SubtractionNumberProblem subtractionNumberProblem = new SubtractionNumberProblem();
+	  	subtractionNumberProblem.hardNumberProblem();
+	  	System.out.println(subtractionNumberProblem.getProblem() + " = " + subtractionNumberProblem.getAnswer());
 	  	
 	  	stage.setResizable(false);
 		stage.show();

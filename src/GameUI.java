@@ -3,7 +3,6 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.NodeOrientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -24,8 +23,7 @@ public class GameUI {
 	
 	private Pane content;
 	private ToolBar toolBar;
-	private Button fullScreenButton;
-	private Button startButton;
+	private Button resumeButton;
 	private Button pauseButton;
 	private Button settingsButton;
 	private String difficulty;
@@ -64,17 +62,17 @@ public class GameUI {
 	 * Constructor for the game UI - builds the screen for the gameplay.
 	 */
 	public GameUI(String difficulty) {
+		// Initializes fields
 		isPaused = false;
 		health = 100;
 		this.difficulty = difficulty;
 		content = new Pane();
 		toolBar = new ToolBar();
-		fullScreenButton = new Button("Full Screen");
-		startButton = new Button("Resume");
-		startButton.setDisable(true);
+		resumeButton = new Button("Resume");
+		resumeButton.setDisable(true); 
 		pauseButton = new Button("Pause");
 		settingsButton = new Button("Settings");
-		toolBar.getItems().addAll(fullScreenButton, startButton, pauseButton, settingsButton);
+		toolBar.getItems().addAll(resumeButton, pauseButton, settingsButton);
 		toolBar.setPrefWidth(800);
 		progressBar = new ProgressBar(1);
 		progressBar.setPrefWidth(700);
@@ -106,7 +104,7 @@ public class GameUI {
 				pauseGame();
 			}
 		});
-		startButton.setOnAction(new EventHandler<ActionEvent>() {
+		resumeButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				resumeGame();
 			}
@@ -144,7 +142,7 @@ public class GameUI {
 	 */
 	public void pauseGame() {
 		timeline.pause();
-		startButton.setDisable(false);
+		resumeButton.setDisable(false);
 		pauseButton.setDisable(true);
 		isPaused = true;
 	}
@@ -155,7 +153,7 @@ public class GameUI {
 	public void resumeGame() {
 		timeline.play();
 		pauseButton.setDisable(false);
-		startButton.setDisable(true);
+		resumeButton.setDisable(true);
 		content.setOnKeyPressed(kEventHandler);
 		isPaused = false;
 	}

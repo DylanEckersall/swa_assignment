@@ -25,16 +25,30 @@ public class DivisionNumberProblem extends NumberProblem {
 		this.setProblem(total + "/" + leftOperator);
 	}
 
-	@Override
+	/**
+	 * Generates a medium difficulty number problem.
+	 * Medium difficulty will generate a medium problem with a max division
+	 * of 100/10.
+	 */
 	public void mediumNumberProblem() {
-		// TODO Auto-generated method stub
-		
+		int leftOperator = this.getNumberGenerator().nextInt(9) + 1;
+		int rightOperator = this.getNumberGenerator().nextInt(9) + 1;
+		int total = leftOperator * rightOperator;
+		this.setAnswer(rightOperator);
+		this.setProblem(total + "/" + leftOperator);
 	}
 
-	@Override
+	/**
+	 * Generates a hard difficulty number problem.
+	 * Hard difficulty will generate a hard problem with a max division
+	 * of 500/10.
+	 */
 	public void hardNumberProblem() {
-		// TODO Auto-generated method stub
-		
+		int leftOperator = this.getNumberGenerator().nextInt(49) + 1;
+		int rightOperator = this.getNumberGenerator().nextInt(9) + 1;
+		int total = leftOperator * rightOperator;
+		this.setAnswer(rightOperator);
+		this.setProblem(total + "/" + leftOperator);
 	}
 
 }

@@ -28,7 +28,9 @@ public class HelpScreenUI {
 	  	mainMenuButton.setPrefWidth(175);
 	  	instructions = new Text();
 	  	instructions.setStyle("-fx-font-size: 20px");
-	  	instructions.setText("1. Click \"Play Game\" on the main menu. \n2.");
+	  	instructions.setText("1. Click \"Play Game\" on the main menu. \n"
+	  					+ "2. Select a difficulty. \n"
+	  					+ "3. ");
 	  	instructions.setFill(Color.WHITE);
 	  	instructions.setX(400);
 	  	instructions.setY(100);
