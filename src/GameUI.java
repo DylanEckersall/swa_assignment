@@ -3,23 +3,17 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Side;
+import javafx.geometry.NodeOrientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import sun.net.www.content.audio.x_aiff;
 
 /**
  * Class for the game UI.
@@ -39,6 +33,7 @@ public class GameUI {
 	private Timeline timeline;
 	private boolean isPaused;
 	private double x;
+	private int health;
 	private NumberCatcher numberCatcher;
 	private EventHandler<KeyEvent> kEventHandler = new EventHandler<KeyEvent>() {
 		public void handle(KeyEvent event) {
@@ -63,12 +58,14 @@ public class GameUI {
 			}
 		}
 	};
+	private ProgressBar progressBar;
 
 	/**
 	 * Constructor for the game UI - builds the screen for the gameplay.
 	 */
 	public GameUI(String difficulty) {
 		isPaused = false;
+		health = 100;
 		this.difficulty = difficulty;
 		content = new Pane();
 		toolBar = new ToolBar();
@@ -79,7 +76,13 @@ public class GameUI {
 		settingsButton = new Button("Settings");
 		toolBar.getItems().addAll(fullScreenButton, startButton, pauseButton, settingsButton);
 		toolBar.setPrefWidth(800);
-		content.getChildren().addAll(toolBar);
+		progressBar = new ProgressBar(1);
+		progressBar.setPrefWidth(700);
+		progressBar.setStyle("-fx-accent: #71F514");
+		progressBar.setLayoutY(540);
+		progressBar.setLayoutX(100);
+		progressBar.setPrefHeight(30);
+		content.getChildren().addAll(toolBar, progressBar);
 		test = new Label("Test");
 		test.setStyle("-fx-font-size: 20px");
 		numberCatcher = NumberCatcher.getInstance();
@@ -110,6 +113,14 @@ public class GameUI {
 		});
 		AdditionNumberProblem additionNumberProblem= new AdditionNumberProblem();
 		test.setText(String.valueOf(additionNumberProblem.getNumberGenerator().nextInt(100) + 1));
+		ImageView healthIcon = new ImageView(new Image(GameUI.class.getResource("resources/health_icon.png").toExternalForm()));
+		healthIcon.setLayoutY(540);
+		healthIcon.setLayoutX(10);
+		Label healthLabel = new Label(String.valueOf(health));
+		healthLabel.setStyle("-fx-font-size: 20px");
+		healthLabel.setLayoutY(540);
+		healthLabel.setLayoutX(45);
+		content.getChildren().addAll(healthIcon, healthLabel);
 	}
 
 	/**

@@ -16,7 +16,7 @@ public class NumberCatcher extends ImageView {
 	 */
 	private NumberCatcher() {
 		setX(375);
-		setY(500);
+		setY(490);
 		setImage(new Image(NumberCatcher.class.getResource("resources/bucket_black.png").toExternalForm()));
 	}
 	
