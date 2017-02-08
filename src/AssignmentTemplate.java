@@ -167,13 +167,6 @@ public class AssignmentTemplate extends Application {
 //	  	tab2.setContent();
 	  	root.getTabs().add(tab2);
 	  	
-	  	DivisionNumberProblem divisionNumberProblem = new DivisionNumberProblem();
-	  	divisionNumberProblem.hardNumberProblem();
-	  	System.out.println(divisionNumberProblem.getProblem() + " = " + divisionNumberProblem.getAnswer());
-	  	SubtractionNumberProblem subtractionNumberProblem = new SubtractionNumberProblem();
-	  	subtractionNumberProblem.hardNumberProblem();
-	  	System.out.println(subtractionNumberProblem.getProblem() + " = " + subtractionNumberProblem.getAnswer());
-	  	
 	  	stage.setResizable(false);
 		stage.show();
 	}

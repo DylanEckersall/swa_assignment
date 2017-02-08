@@ -21,7 +21,7 @@ public class AdditionNumberProblem extends NumberProblem {
 		int leftOperator = this.getNumberGenerator().nextInt(4) + 1;
 		int rightOperator = this.getNumberGenerator().nextInt(4) + 1;
 		this.setAnswer((double) leftOperator + (double) rightOperator);
-		this.setProblem(leftOperator + "+" + rightOperator);
+		this.setProblem(leftOperator + " + " + rightOperator);
 	}
 
 	/**
@@ -32,7 +32,7 @@ public class AdditionNumberProblem extends NumberProblem {
 		int leftOperator = this.getNumberGenerator().nextInt(49) + 1;
 		int rightOperator = this.getNumberGenerator().nextInt(49) + 1;
 		this.setAnswer((double) leftOperator + (double) rightOperator);
-		this.setProblem(leftOperator + "+" + rightOperator);
+		this.setProblem(leftOperator + " + " + rightOperator);
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class AdditionNumberProblem extends NumberProblem {
 		int leftOperator = this.getNumberGenerator().nextInt(499) + 1;
 		int rightOperator = this.getNumberGenerator().nextInt(499) + 1;
 		this.setAnswer((double) leftOperator + (double) rightOperator);
-		this.setProblem(leftOperator + "+" + rightOperator);
+		this.setProblem(leftOperator + " + " + rightOperator);
 	}
 
 }

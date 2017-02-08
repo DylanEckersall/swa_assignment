@@ -25,7 +25,6 @@ public class NumberCatcher extends ImageView {
 		rectangle = new Rectangle(50, 50);
 		rectangle.setX(375);
 		rectangle.setY(490);
-		System.out.println(rectangle.getWidth() + " - " + rectangle.getHeight());
 	}
 	
 	/**

@@ -1,5 +1,7 @@
 import java.util.Random;
 
+import javafx.scene.control.Label;
+
 /**
  * Number problem abstract class declares common methods
  * which all NumberProblems must implement. 
