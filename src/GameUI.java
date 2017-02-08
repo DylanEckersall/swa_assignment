@@ -1,7 +1,4 @@
 import java.util.ArrayList;
-
-import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
-
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -38,6 +35,7 @@ public class GameUI {
 	private boolean isPaused;
 	private double x;
 	private ArrayList<Label> fallingSums; 
+	private ArrayList<Label> toDelete;
 	private int health;
 	private NumberCatcher numberCatcher;
 	private EventHandler<KeyEvent> kEventHandler = new EventHandler<KeyEvent>() {
@@ -66,14 +64,30 @@ public class GameUI {
 		}
 	};
 	private ProgressBar progressBar;
+	private Label healthLabel;
 	private AnimationTimer animationTimer = new AnimationTimer() {
 		public void handle(long now) {
+			boolean intersect = false;
 			for (Label label : fallingSums) {
 				label.setShape(new Rectangle(label.getLayoutX(), label.getLayoutY(), label.getWidth(), label.getHeight()));
 				if (label.getShape().intersects(numberCatcher.getRectangle().getX(), numberCatcher.getRectangle().getY(), numberCatcher.getRectangle().getWidth(), numberCatcher.getRectangle().getHeight())) {
-					System.out.println("Test");
+					intersect = true;
+				}
+				if (label.getLayoutY() > 600) {
+					toDelete.add(label);
 				}
 			}
+			if (intersect == true) {
+				progressBar.setProgress(progressBar.getProgress() - .0032);
+				healthLabel.setText(String.valueOf((int)(progressBar.getProgress() * 100)));
+			}
+			if (progressBar.getProgress() <= 0) {
+				System.out.println("Game over!");
+			}
+			for (Label toRemove : toDelete) {
+				fallingSums.remove(toRemove);
+			}
+			toDelete.clear();
 		}
 	};
 
@@ -90,7 +104,9 @@ public class GameUI {
 		resumeButton = new Button("Resume");
 		resumeButton.setDisable(true); 
 		pauseButton = new Button("Pause");
+		healthLabel = new Label(String.valueOf(health));
 		fallingSums = new ArrayList<Label>();
+		toDelete = new ArrayList<Label>();
 		settingsButton = new Button("Settings");
 		toolBar.getItems().addAll(resumeButton, pauseButton, settingsButton);
 		toolBar.setPrefWidth(800);
@@ -133,7 +149,6 @@ public class GameUI {
 		ImageView healthIcon = new ImageView(new Image(GameUI.class.getResource("resources/health_icon.png").toExternalForm()));
 		healthIcon.setLayoutY(540);
 		healthIcon.setLayoutX(10);
-		Label healthLabel = new Label(String.valueOf(health));
 		healthLabel.setStyle("-fx-font-size: 20px");
 		healthLabel.setLayoutY(540);
 		healthLabel.setLayoutX(45);
