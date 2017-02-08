@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+
+import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
+
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -12,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 /**
@@ -31,6 +37,7 @@ public class GameUI {
 	private Timeline timeline;
 	private boolean isPaused;
 	private double x;
+	private ArrayList<Label> fallingSums; 
 	private int health;
 	private NumberCatcher numberCatcher;
 	private EventHandler<KeyEvent> kEventHandler = new EventHandler<KeyEvent>() {
@@ -38,11 +45,13 @@ public class GameUI {
 			if (!isPaused) {
 				if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.A) {
 					numberCatcher.setX(x - 15);
-					x -= 10;
+					numberCatcher.getRectangle().setX(x - 15);
+					x -= 15;
 				}
 				if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.D) {
 					numberCatcher.setX(x + 15);
-					x += 10;
+					numberCatcher.getRectangle().setX(x + 15);
+					x += 15;
 				} 
 			}
 			if (event.getCode() == KeyCode.P) {
@@ -57,6 +66,16 @@ public class GameUI {
 		}
 	};
 	private ProgressBar progressBar;
+	private AnimationTimer animationTimer = new AnimationTimer() {
+		public void handle(long now) {
+			for (Label label : fallingSums) {
+				label.setShape(new Rectangle(label.getLayoutX(), label.getLayoutY(), label.getWidth(), label.getHeight()));
+				if (label.getShape().intersects(numberCatcher.getRectangle().getX(), numberCatcher.getRectangle().getY(), numberCatcher.getRectangle().getWidth(), numberCatcher.getRectangle().getHeight())) {
+					System.out.println("Test");
+				}
+			}
+		}
+	};
 
 	/**
 	 * Constructor for the game UI - builds the screen for the gameplay.
@@ -71,6 +90,7 @@ public class GameUI {
 		resumeButton = new Button("Resume");
 		resumeButton.setDisable(true); 
 		pauseButton = new Button("Pause");
+		fallingSums = new ArrayList<Label>();
 		settingsButton = new Button("Settings");
 		toolBar.getItems().addAll(resumeButton, pauseButton, settingsButton);
 		toolBar.setPrefWidth(800);
@@ -83,9 +103,8 @@ public class GameUI {
 		content.getChildren().addAll(toolBar, progressBar);
 		test = new Label("Test");
 		test.setStyle("-fx-font-size: 20px");
+		fallingSums.add(test);
 		numberCatcher = NumberCatcher.getInstance();
-		numberCatcher.setFitWidth(50);
-		numberCatcher.setFitHeight(50);
 		x = numberCatcher.getX();
 		content.getChildren().add(numberCatcher);
 		content.setOnKeyPressed(kEventHandler);
@@ -119,6 +138,7 @@ public class GameUI {
 		healthLabel.setLayoutY(540);
 		healthLabel.setLayoutX(45);
 		content.getChildren().addAll(healthIcon, healthLabel);
+		animationTimer.start();
 	}
 
 	/**

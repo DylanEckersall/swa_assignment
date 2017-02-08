@@ -1,5 +1,6 @@
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
 
 /**
  * Number catcher class represents the bucket used
@@ -10,6 +11,7 @@ import javafx.scene.image.ImageView;
 public class NumberCatcher extends ImageView {
 
 	private static NumberCatcher instance = null;
+	private Rectangle rectangle;
 	
 	/**
 	 * Creates a new number catcher object in the bottom middle of the screen.
@@ -18,6 +20,12 @@ public class NumberCatcher extends ImageView {
 		setX(375);
 		setY(490);
 		setImage(new Image(NumberCatcher.class.getResource("resources/bucket_black.png").toExternalForm()));
+		setFitHeight(50);
+		setFitWidth(50);
+		rectangle = new Rectangle(50, 50);
+		rectangle.setX(375);
+		rectangle.setY(490);
+		System.out.println(rectangle.getWidth() + " - " + rectangle.getHeight());
 	}
 	
 	/**
@@ -29,6 +37,22 @@ public class NumberCatcher extends ImageView {
 			instance = new NumberCatcher();
 		}
 		return instance;
+	}
+	
+	/**
+	 * Returns the rectangle for the numberCatcher object.
+	 * @return the rectangle for the number catcher.
+	 */
+	public Rectangle getRectangle() {
+		return rectangle;
+	}
+	
+	/**
+	 * Sets the rectangle for the numberCatcher object.
+	 * @param rectangle the rectangle to set.
+	 */
+	public void setRectangle(Rectangle rectangle) {
+		this.rectangle = rectangle;
 	}
 	
 }
