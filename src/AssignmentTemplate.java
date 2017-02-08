@@ -24,6 +24,13 @@ public class AssignmentTemplate extends Application {
 	private Scene scene; 
 	private TabPane root; 
 	private Tab tab1, tab2;
+	private MainMenuUI mainMenuUI;
+	private HelpScreenUI helpScreenUI;
+	private ProblemSelectionUI problemSelectionUI;
+	private DifficultyUI difficultyUI;
+	private GameUI gameUI;
+  	private String problemType; 
+  	private String difficulty;
 	
 	public static void main(String[] args) {
 			launch(args);
@@ -44,14 +51,14 @@ public class AssignmentTemplate extends Application {
 	  	
 		String background = AssignmentTemplate.class.getResource("resources/background.jpg").toExternalForm();
 	  	
-	  	// Creates objects for all of the UI components.
-	  	MainMenuUI mainMenuUI = new MainMenuUI();
-	  	HelpScreenUI helpScreen = new HelpScreenUI();
-	  	GameUI gameUI = new GameUI("Test");
+	  	// Creates objects for all of the UI components except the game.
+	  	mainMenuUI = new MainMenuUI();
+	  	helpScreenUI = new HelpScreenUI();
+	  	problemSelectionUI = new ProblemSelectionUI();
+	  	difficultyUI = new DifficultyUI();
 	  	
 	  	// Implements the event handler for the quit button on the main menu.
 	  	mainMenuUI.getQuitButton().setOnAction(new EventHandler<ActionEvent>() {
-			@Override
 			public void handle(ActionEvent event) {
 				System.exit(0);	
 			}
@@ -59,25 +66,89 @@ public class AssignmentTemplate extends Application {
 	  	
 	  	// Implements the event handler for the help button on the main menu.
 	  	mainMenuUI.getHelpButton().setOnAction(new EventHandler<ActionEvent>() {
-			@Override
 			public void handle(ActionEvent event) {
-				tab1.setContent(helpScreen.getContent());	
+				tab1.setContent(helpScreenUI.getContent());	
 			}
 		});
 	  	
 	  	// Implements the event handler for the play game button on the main menu.
 	  	mainMenuUI.getPlayButton().setOnAction(new EventHandler<ActionEvent>() {
-			@Override
 			public void handle(ActionEvent event) {
-				tab1.setContent(gameUI.getContent());
+				tab1.setContent(problemSelectionUI.getContent());
 			}
 		});
 	  	
 	  	// Implements the event handler for the main menu button on the help screen.
-	  	helpScreen.getMainMenuButton().setOnAction(new EventHandler<ActionEvent>() {
-			@Override
+	  	helpScreenUI.getMainMenuButton().setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				tab1.setContent(mainMenuUI.getContent());
+			}
+		});
+	  	
+	  	// Implements the event handler for the addition button on the problem selection screen.
+	  	problemSelectionUI.getAdditionButton().setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				problemType = "Addition";
+				tab1.setContent(difficultyUI.getContent());
+			}
+		});
+	  	
+	  	// Implements the event handler for the subtraction button on the problem selection screen.
+	  	problemSelectionUI.getSubtractionButton().setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				problemType = "Subtraction";
+				tab1.setContent(difficultyUI.getContent());
+			}
+		});
+	  	
+	  	// Implements the event handler for the multiplication button on the problem selection screen.
+	  	problemSelectionUI.getMultiplicationButton().setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				problemType = "Multiplication";
+				tab1.setContent(difficultyUI.getContent());
+			}
+		});
+	  	
+	  	// Implements the event handler for the division button on the problem selection screen.
+	  	problemSelectionUI.getDivisionButton().setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				problemType = "Division";
+				tab1.setContent(difficultyUI.getContent());
+			}
+		});
+	  	
+	  	// Implements the event handler for the mixed button on the problem selection screen.
+	  	problemSelectionUI.getMixedButton().setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				problemType = "Mixed";
+				tab1.setContent(difficultyUI.getContent());
+			}
+		});
+	  	
+	  	// Implements the event handler for the easy button on the difficulty screen.
+	  	difficultyUI.getEasyButton().setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				difficulty = "Easy";
+				gameUI = new GameUI(difficulty, problemType);
+				tab1.setContent(gameUI.getContent());
+			}
+		});
+	  	
+	  	// Implements the event handler for the medium button on the difficulty screen.
+	  	difficultyUI.getMediumButton().setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				difficulty = "Medium";
+				gameUI = new GameUI(difficulty, problemType);
+				tab1.setContent(gameUI.getContent());
+			}
+		});
+	  	
+	  	// Implements the event handler for the hard button on the difficulty screen.
+	  	difficultyUI.getHardButton().setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				difficulty = "Hard";
+				gameUI = new GameUI(difficulty, problemType);
+				tab1.setContent(gameUI.getContent());
 			}
 		});
 	  	

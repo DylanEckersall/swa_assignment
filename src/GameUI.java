@@ -30,6 +30,7 @@ public class GameUI {
 	private Button pauseButton;
 	private Button settingsButton;
 	private String difficulty;
+	private String problemType;
 	private Label test;
 	private Timeline timeline;
 	private boolean isPaused;
@@ -99,11 +100,12 @@ public class GameUI {
 	/**
 	 * Constructor for the game UI - builds the screen for the gameplay.
 	 */
-	public GameUI(String difficulty) {
+	public GameUI(String difficulty, String problemType) {
 		// Initializes fields
 		isPaused = false;
 		health = 100;
 		this.difficulty = difficulty;
+		this.problemType = problemType;
 		content = new Pane();
 		toolBar = new ToolBar();
 		resumeButton = new Button("Resume");

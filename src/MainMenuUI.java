@@ -43,13 +43,13 @@ public class MainMenuUI {
 	  	playButton.setLayoutX(300);
 	  	helpButton.setLayoutX(300);
 	  	quitButton.setLayoutX(300);
-	  	playButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 20px; -fx-cursor: hand");
+	  	playButton.setStyle("-fx-background-color: #00ffff; -fx-font-size: 20px; -fx-cursor: hand");
 	  	playButton.setPrefHeight(100);
 	  	playButton.setPrefWidth(200);
-	  	helpButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 20px; -fx-cursor: hand");
+	  	helpButton.setStyle("-fx-background-color: #00ffff; -fx-font-size: 20px; -fx-cursor: hand");
 	  	helpButton.setPrefHeight(100);
 	  	helpButton.setPrefWidth(200);
-	  	quitButton.setStyle("-fx-background-color: #1aff1a; -fx-font-size: 20px; -fx-cursor: hand");
+	  	quitButton.setStyle("-fx-background-color: #00ffff; -fx-font-size: 20px; -fx-cursor: hand");
 	  	quitButton.setPrefHeight(100);
 	  	quitButton.setPrefWidth(200);
 		// Adds the buttons to the main menu pane.
