@@ -143,11 +143,13 @@ public class GameUI {
 		timeline.play();
 		content.requestFocus();
 		content.setFocusTraversable(false);
+		// Event handler for the pause button.
 		pauseButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				pauseGame();
 			}
 		});
+		// Event handler for the resume button.
 		resumeButton.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				resumeGame();
@@ -155,13 +157,16 @@ public class GameUI {
 		});
 		AdditionNumberProblem additionNumberProblem= new AdditionNumberProblem();
 		test.setText(String.valueOf(additionNumberProblem.getNumberGenerator().nextInt(100) + 1));
+		// Creates an image for the players health icon.
 		ImageView healthIcon = new ImageView(new Image(GameUI.class.getResource("resources/health_icon.png").toExternalForm()));
+		// Styling and positioning of the health icon and health number.
 		healthIcon.setLayoutY(540);
 		healthIcon.setLayoutX(10);
 		healthLabel.setStyle("-fx-font-size: 20px");
 		healthLabel.setLayoutY(540);
 		healthLabel.setLayoutX(45);
 		content.getChildren().addAll(healthIcon, healthLabel);
+		// Starts the animation timer.
 		animationTimer.start();
 	}
 
