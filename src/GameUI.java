@@ -33,11 +33,13 @@ public class GameUI {
 	private Label test;
 	private Timeline timeline;
 	private boolean isPaused;
+	private boolean intersectFlag;
 	private double x;
 	private ArrayList<Label> fallingSums; 
 	private ArrayList<Label> toDelete;
 	private int health;
 	private NumberCatcher numberCatcher;
+	// KeyEvent handler handles the catcher movement and UI shortcuts.
 	private EventHandler<KeyEvent> kEventHandler = new EventHandler<KeyEvent>() {
 		public void handle(KeyEvent event) {
 			if (!isPaused) {
@@ -65,29 +67,32 @@ public class GameUI {
 	};
 	private ProgressBar progressBar;
 	private Label healthLabel;
+	// Animation timer checks for intersects and handles sums which go off the screen.
 	private AnimationTimer animationTimer = new AnimationTimer() {
 		public void handle(long now) {
-			boolean intersect = false;
 			for (Label label : fallingSums) {
 				label.setShape(new Rectangle(label.getLayoutX(), label.getLayoutY(), label.getWidth(), label.getHeight()));
-				if (label.getShape().intersects(numberCatcher.getRectangle().getX(), numberCatcher.getRectangle().getY(), numberCatcher.getRectangle().getWidth(), numberCatcher.getRectangle().getHeight())) {
-					intersect = true;
+				if (label.getShape().intersects(numberCatcher.getRectangle().getX(), numberCatcher.getRectangle().getY(),
+						numberCatcher.getRectangle().getWidth(), numberCatcher.getRectangle().getHeight()) && fallingSums.contains(label)) {
+					intersectFlag = true;
+					toDelete.add(label);
 				}
 				if (label.getLayoutY() > 600) {
 					toDelete.add(label);
 				}
 			}
-			if (intersect == true) {
-				progressBar.setProgress(progressBar.getProgress() - .0032);
-				healthLabel.setText(String.valueOf((int)(progressBar.getProgress() * 100)));
-			}
-			if (progressBar.getProgress() <= 0) {
-				System.out.println("Game over!");
-			}
 			for (Label toRemove : toDelete) {
 				fallingSums.remove(toRemove);
 			}
 			toDelete.clear();
+			if (intersectFlag == true) {
+				progressBar.setProgress(progressBar.getProgress() - .10);
+				healthLabel.setText(String.valueOf((int)(progressBar.getProgress() * 100)));
+				intersectFlag = false;
+			}
+			if (progressBar.getProgress() <= 0) {
+				System.out.println("Game over!");
+			}
 		}
 	};
 
@@ -107,9 +112,12 @@ public class GameUI {
 		healthLabel = new Label(String.valueOf(health));
 		fallingSums = new ArrayList<Label>();
 		toDelete = new ArrayList<Label>();
+		intersectFlag = false;
 		settingsButton = new Button("Settings");
+		// Adds UI buttons to the toolbar.
 		toolBar.getItems().addAll(resumeButton, pauseButton, settingsButton);
 		toolBar.setPrefWidth(800);
+		// Creates a new progress bar to represent the players health.
 		progressBar = new ProgressBar(1);
 		progressBar.setPrefWidth(700);
 		progressBar.setStyle("-fx-accent: #71F514");
@@ -120,16 +128,17 @@ public class GameUI {
 		test = new Label("Test");
 		test.setStyle("-fx-font-size: 20px");
 		fallingSums.add(test);
-		numberCatcher = NumberCatcher.getInstance();
+		numberCatcher = NumberCatcher.getInstance(); // getInstance() is used as NumberCatcher is a singleton.
 		x = numberCatcher.getX();
 		content.getChildren().add(numberCatcher);
 		content.setOnKeyPressed(kEventHandler);
 		content.getChildren().addAll(test);
+		// Creates a new timeline to animate the falling sums.
 		timeline = new Timeline();
 		timeline.setCycleCount(timeline.INDEFINITE);
-		timeline.setAutoReverse(true);
+		// Timeline uses KeyValues and KeyFrames for animations.
 		KeyValue keyValue = new KeyValue(test.layoutYProperty(), 800);
-		KeyFrame keyFrame = new KeyFrame(Duration.seconds(5), keyValue);
+		KeyFrame keyFrame = new KeyFrame(Duration.seconds(10), keyValue);
 		timeline.getKeyFrames().add(keyFrame);
 		timeline.play();
 		content.requestFocus();
@@ -177,6 +186,7 @@ public class GameUI {
 	 */
 	public void pauseGame() {
 		timeline.pause();
+		animationTimer.stop();
 		resumeButton.setDisable(false);
 		pauseButton.setDisable(true);
 		isPaused = true;
@@ -187,6 +197,7 @@ public class GameUI {
 	 */
 	public void resumeGame() {
 		timeline.play();
+		animationTimer.start();
 		pauseButton.setDisable(false);
 		resumeButton.setDisable(true);
 		content.setOnKeyPressed(kEventHandler);
