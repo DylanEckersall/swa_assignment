@@ -18,7 +18,7 @@ public class SubtractionNumberProblem extends NumberProblem{
 	 */
 	public void easyNumberProblem() {
 		int firstNumber = this.getNumberGenerator().nextInt(9) + 1;
-		int secondNumber = this.getNumberGenerator().nextInt(4) + 1;
+		int secondNumber = this.getNumberGenerator().nextInt(9) + 1;
 		int leftOperator = Math.max(firstNumber, secondNumber);
 		int rightOperator = Math.min(firstNumber, secondNumber);
 		setAnswer(leftOperator - rightOperator);
