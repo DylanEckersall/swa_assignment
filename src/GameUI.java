@@ -168,13 +168,25 @@ public class GameUI {
 		// Creates a new timertask for checking if the correct answer exists in the ArrayList.
 		 TimerTask checkAnswerIsFalling = new TimerTask() {
 			public void run() {
-				if (!fallingSums.contains(numberProblemLabel)) {
-					fallingSums.add(numberProblemLabel);
+					Platform.runLater(new Runnable() {
+						public void run() {
+							Random random = new Random();
+							Label number = new Label(numberProblem.getProblem());
+							number.setLayoutX(random.nextInt(750) + 1);
+							number.setStyle("-fx-font-size: 18px");
+							content.getChildren().add(number);
+							fallingSums.add(number);
+							Timeline timeline = new Timeline(60);
+							KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
+							KeyFrame keyFrame = new KeyFrame(Duration.seconds(10), keyValue);
+							timeline.getKeyFrames().add(keyFrame);
+							timeline.play();
+						}
+					});
 				}
-			}
 		};
 		// Sets the task to run every 10 seconds.
-		timer.schedule(checkAnswerIsFalling, 10000);
+		timer.scheduleAtFixedRate(checkAnswerIsFalling, 10000, 10000);
 		// Creates a new timertask for generating falling numbers.
 		TimerTask createFallingNumber = new TimerTask() {
 			public void run() {
@@ -182,7 +194,7 @@ public class GameUI {
 					public void run() {
 						Random random = new Random();
 						Label number = new Label(generateFallingNumber());
-						number.setLayoutX(random.nextInt(799) + 1);
+						number.setLayoutX(random.nextInt(750) + 1);
 						number.setStyle("-fx-font-size: 18px");
 						content.getChildren().add(number);
 						fallingSums.add(number);
@@ -336,7 +348,7 @@ public class GameUI {
 		}
 		// Sets the text of the associated labels.
 		numberProblemLabel.setText(numberProblem.getProblem());
-		answerLabel.setText(String.valueOf(numberProblem.getAnswer()));
+		answerLabel.setText(String.valueOf((int)numberProblem.getAnswer()));
 	}
 	
 	/**
@@ -355,6 +367,26 @@ public class GameUI {
 			}
 			if (difficulty.equalsIgnoreCase("hard")) {
 				fallingSum = random.nextInt(499)+1 + " + " + random.nextInt(499)+1;
+			}
+		}
+		if (numberProblem.getProblem().contains("/")) {
+			if (difficulty.equalsIgnoreCase("easy")) {
+				int leftOperator = random.nextInt(9) + 1;
+				int rightOperator = random.nextInt(4) + 1;
+				int total = leftOperator * rightOperator;
+				fallingSum = String.valueOf(total) + " / " + String.valueOf(rightOperator);
+			}
+			if (difficulty.equalsIgnoreCase("medium")) {
+				int leftOperator = random.nextInt(9) + 1;
+				int rightOperator = random.nextInt(9) + 1;
+				int total = leftOperator * rightOperator;
+				fallingSum = String.valueOf(total) + " / " + String.valueOf(rightOperator);
+			}
+			if (difficulty.equalsIgnoreCase("hard")) {
+				int leftOperator = random.nextInt(49) + 1;
+				int rightOperator = random.nextInt(9) + 1;
+				int total = leftOperator * rightOperator;
+				fallingSum = String.valueOf(total) + " / " + String.valueOf(rightOperator);
 			}
 		}
 		return fallingSum;
