@@ -45,6 +45,7 @@ public class GameUI {
 	private boolean isPaused;
 	private boolean intersectFlag;
 	private double x;
+	private int timeTaken;
 	private ArrayList<Label> fallingSums; 
 	private ArrayList<Label> toDelete;
 	private ArrayList<KeyFrame> keyFrames;
@@ -137,6 +138,7 @@ public class GameUI {
 		// Initializes fields
 		isPaused = false;
 		health = 100;
+		timeTaken = 0;
 		this.difficulty = difficulty;
 		this.problemType = problemType;
 		content = new Pane();
@@ -189,7 +191,6 @@ public class GameUI {
 						KeyFrame keyFrame = new KeyFrame(Duration.seconds(10), keyValue);
 						timeline.getKeyFrames().add(keyFrame);
 						timeline.play();
-						System.out.println(numberProblem.getProblem());
 					}
 				});
 			}
@@ -197,6 +198,14 @@ public class GameUI {
 		// Sets the task to run every 3 seconds.
 		timer.scheduleAtFixedRate(createFallingNumber, 1, 3000);
 		// Creates a timer task to represent a timer.
+		TimerTask timerTask = new TimerTask() {
+			public void run() {
+				timeTaken += 1;
+				System.out.println(timeTaken);
+			}
+		};
+		// Sets the timer task to run every second.
+		timer.scheduleAtFixedRate(timerTask, 0, 1000);
 		// Adds UI buttons to the toolbar.
 		toolBar.getItems().addAll(resumeButton, pauseButton, settingsButton);
 		toolBar.setPrefWidth(800);
@@ -349,6 +358,13 @@ public class GameUI {
 			}
 		}
 		return fallingSum;
+	}
+	
+	/**
+	 * Ends the current game.
+	 */
+	public void endGame() {
+		
 	}
 	
 	

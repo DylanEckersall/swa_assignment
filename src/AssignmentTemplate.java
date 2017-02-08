@@ -13,6 +13,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * The AssignmentTemplate class used for running the application.
@@ -28,6 +29,7 @@ public class AssignmentTemplate extends Application {
 	private HelpScreenUI helpScreenUI;
 	private ProblemSelectionUI problemSelectionUI;
 	private DifficultyUI difficultyUI;
+	private HighScoresUI highScoresUI;
 	private GameUI gameUI;
   	private String problemType; 
   	private String difficulty;
@@ -56,6 +58,7 @@ public class AssignmentTemplate extends Application {
 	  	helpScreenUI = new HelpScreenUI();
 	  	problemSelectionUI = new ProblemSelectionUI();
 	  	difficultyUI = new DifficultyUI();
+	  	highScoresUI = new HighScoresUI();
 	  	
 	  	// Implements the event handler for the quit button on the main menu.
 	  	mainMenuUI.getQuitButton().setOnAction(new EventHandler<ActionEvent>() {
@@ -164,8 +167,15 @@ public class AssignmentTemplate extends Application {
 	  	tab2 = new Tab();
 	  	tab2.setText("High Scores");
 	  	tab2.setClosable(false);
-//	  	tab2.setContent();
+	  	tab2.setContent(highScoresUI.getContent());
 	  	root.getTabs().add(tab2);
+	  	
+	  	// Stops timers from running when the application has been closed.
+	  	stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			public void handle(WindowEvent event) {
+				System.exit(0);
+			}
+		});
 	  	
 	  	stage.setResizable(false);
 		stage.show();
