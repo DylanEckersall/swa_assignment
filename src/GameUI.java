@@ -31,14 +31,12 @@ import javafx.util.Duration;
 public class GameUI {
 	
 	private Pane content;
-	private ToolBar toolBar;
+	private ToolBar toolBar; // Toolbar stores all of the "menu" buttons.
 	private Button resumeButton;
 	private Button pauseButton;
-	private Button settingsButton;
 	private String difficulty;
 	private String problemType;
-	private Timeline timeline;
-	private Timer timer;
+	private Timer timer; // Timer is used for scheduling tasks to repeat at a fixed rate.
 	// Creates a new timertask representing a clock timer.
 	private TimerTask timerTask = new TimerTask() {
 		public void run() {
@@ -58,13 +56,13 @@ public class GameUI {
 						Random random = new Random();
 						Label number = new Label(numberProblem.getProblem());
 						number.setLayoutY(75);
-						number.setLayoutX(random.nextInt(750) + 1);
+						number.setLayoutX(random.nextInt(750) + 1); // Falling number spawns at random X position.
 						number.setStyle("-fx-font-size: 18px");
 						content.getChildren().add(number);
 						fallingSums.add(number);
 						Timeline timeline = new Timeline(60);
-						timeline.setCycleCount(1);
-						timelines.add(timeline);
+						timeline.setCycleCount(1); // CycleCount set to 1 for garbage collection.
+						timelines.add(timeline); // Timeline added to array which is used for pause method.
 						KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
 						KeyFrame keyFrame = new KeyFrame(fallingDuration, keyValue);
 						timeline.getKeyFrames().add(keyFrame);
@@ -79,6 +77,7 @@ public class GameUI {
 			Platform.runLater(new Runnable() {
 				public void run() {
 					Random random = new Random();
+					// Uses the generateFallingNumber() method to generate a random sum.
 					Label number = new Label(generateFallingNumber());
 					number.setLayoutY(75);
 					number.setLayoutX(random.nextInt(750) + 1);
@@ -96,12 +95,11 @@ public class GameUI {
 			});
 		}
 	};
-	private NumberProblem numberProblem;
+	private NumberProblem numberProblem; // The current number problem in use.
 	private Label answerLabel;
 	private Label timerLabel;
 	private Label scoreLabel;
 	private boolean isPaused;
-	private boolean intersectFlag;
 	private double x;
 	private int timeTaken;
 	private int score;
@@ -116,18 +114,22 @@ public class GameUI {
 	// KeyEvent handler handles the catcher movement and UI shortcuts.
 	private EventHandler<KeyEvent> kEventHandler = new EventHandler<KeyEvent>() {
 		public void handle(KeyEvent event) {
+			// If the game is not paused:
 			if (!isPaused) {
+				// Pressing left arrow key or the A key will move the number catcher to the left.
 				if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.A) {
 					numberCatcher.setX(x - 15);
 					numberCatcher.getRectangle().setX(x - 15);
 					x -= 15;
 				}
+				// Pressing right arrow key or the D key will move the number catcher to the right.
 				if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.D) {
 					numberCatcher.setX(x + 15);
 					numberCatcher.getRectangle().setX(x + 15);
 					x += 15;
 				} 
 			}
+			// Pressing the P key will toggle the game between the paused and resumed state.
 			if (event.getCode() == KeyCode.P) {
 				if (isPaused == false) {
 					pauseGame();
@@ -139,22 +141,26 @@ public class GameUI {
 			}
 		}
 	};
-	private ProgressBar progressBar;
+	private ProgressBar progressBar; // ProgressBar represents the players health bar.
 	private Label healthLabel;
 	// Animation timer checks for intersects and handles sums which go off the screen.
 	private AnimationTimer animationTimer = new AnimationTimer() {
+		boolean intersectFlag = false;
 		public void handle(long now) {
 			boolean correctAnswer = false;
+			// Cycles through the labels on the screen and checks if they intersect with the number catcher.
 			for (Label label : fallingSums) {
 				label.setShape(new Rectangle(label.getLayoutX(), label.getLayoutY(), label.getWidth(), label.getHeight()));
+				// If they do intersect:
 				if (label.getShape().intersects(numberCatcher.getRectangle().getX(), numberCatcher.getRectangle().getY(),
 						numberCatcher.getRectangle().getWidth(), numberCatcher.getRectangle().getHeight()) && fallingSums.contains(label)) {
 					intersectFlag = true;
-					content.getChildren().remove(label);
-					toDelete.add(label);
+					content.getChildren().remove(label); // Removes intersecting label from the screen.
+					toDelete.add(label); // Adds the label to the "toDelete" list to be deleted later.
 					int sum = 0;
 					String firstNumber = "";
 					String secondNumber = "";
+					// Regular expression extracts the 2 numbers from the label text.
 					Pattern pattern = Pattern.compile("^([0-9]*)");
 					Pattern pattern2 = Pattern.compile("([0-9]*)$");
 					Matcher matcher = pattern.matcher(label.getText());
@@ -163,6 +169,7 @@ public class GameUI {
 						firstNumber = matcher.group(1);
 						secondNumber = matcher2.group(1);
 					}
+					// Computes the sum of the numbers from the label.
 					if (numberProblem.getProblem().contains("+")) {
 						sum = Integer.parseInt(firstNumber) + Integer.parseInt(secondNumber);
 					}
@@ -175,30 +182,36 @@ public class GameUI {
 					if (numberProblem.getProblem().contains("-")) {
 						sum = Integer.parseInt(firstNumber) - Integer.parseInt(secondNumber);
 					}
+					// Checks if the sum of the numbers from the label matches the answer of the given problem.
 					if (sum == (int) numberProblem.getAnswer()) {
 						correctAnswer = true;
 					}
 				}
+				// Deletes the label when it goes out of the screen area.
 				if (label.getLayoutY() > 600) {
 					toDelete.add(label);
+					content.getChildren().remove(label);
 				}
 			}
+			// Deletes all of the labels which have intersected or gone off the screen.
 			for (Label toRemove : toDelete) {
 				fallingSums.remove(toRemove);
 			}
-			for (KeyFrame keyFrame : keyFrames) {
-				timeline.getKeyFrames().remove(keyFrame);
-			}
 			toDelete.clear();
+			// If a label intersects with the number catcher:
 			if (intersectFlag == true) {
+				// If the equation caught matches the sum:
 				if (correctAnswer) {
+					// Removes all of the current labels from the screen.
 					for (Label label2 : fallingSums) {
 						content.getChildren().remove(label2);
 					}
+					// Clears the list of falling numbers.
 					fallingSums.clear();
-					System.out.println("True");
-					generateNumberProblem();
+					generateNumberProblem(); // Generates a new number problem.
+					// Reduces the time taken for numbers to fall to the bottom of the screen.
 					fallingDuration = fallingDuration.subtract(Duration.millis(250));
+					// Logic for updating the players score relative to the time taken.
 					if (timeTaken < 10) {
 						score += 50;
 						scoreLabel.setText("Score: " + String.valueOf(score));
@@ -226,17 +239,20 @@ public class GameUI {
 					}
 					progressBar.setProgress(progressBar.getProgress() + .10);
 				}
+				// If the sum of the equation caught does not match the answer to the number problem.
 				else if (!correctAnswer) {
-					progressBar.setProgress(progressBar.getProgress() - .10);
+					progressBar.setProgress(progressBar.getProgress() - .10); // Decreases health by 10.
 					healthLabel.setText(String.valueOf((int)(progressBar.getProgress() * 100)));
 					intersectFlag = false;
 				}
 			}
+			// If the players health gets to 0.
 			if (progressBar.getProgress() <= 0) {
-				System.out.println("Game over!");
+				endGame(); // Ends the game.
 			}
 		}
 	};
+	
 
 	/**
 	 * Constructor for the game UI - builds the screen for the gameplay.
@@ -260,8 +276,6 @@ public class GameUI {
 		keyFrames = new ArrayList<KeyFrame>();
 		toDelete = new ArrayList<Label>();
 		timelines = new ArrayList<Timeline>();
-		intersectFlag = false;
-		settingsButton = new Button("Settings");
 		numberProblemFactory = new NumberProblemFactory();
 		timer = new Timer();
 		answerLabel = new Label();
@@ -279,7 +293,7 @@ public class GameUI {
 		// Sets the timer task to run every second.
 		timer.scheduleAtFixedRate(timerTask, 0, 1000);
 		// Adds UI buttons to the toolbar.
-		toolBar.getItems().addAll(resumeButton, pauseButton, settingsButton);
+		toolBar.getItems().addAll(resumeButton, pauseButton);
 		toolBar.setPrefWidth(800);
 		// Creates a new progress bar to represent the players health.
 		progressBar = new ProgressBar(1);
@@ -358,6 +372,7 @@ public class GameUI {
 	 * Pauses the game.
 	 */
 	public void pauseGame() {
+		// Pauses all of the current timelines.
 		for (Timeline timeline : timelines) {
 			timeline.pause();
 		}
@@ -379,6 +394,7 @@ public class GameUI {
 		// Creates a new timer since the old one has been cancelled.
 		timer = new Timer();
 		// Recreates the timer tasks, since the old ones cannot be re-used.
+		// Creates a new timer task representing a clock timer.
 		timerTask = new TimerTask() {
 			public void run() {
 				Platform.runLater(new Runnable() {
@@ -503,6 +519,8 @@ public class GameUI {
 	public String generateFallingNumber() {
 		Random random = new Random();
 		String fallingSum = "";
+		// Generates a random string based on the problem type.
+		// Creates a random addition sum.
 		if (numberProblem.getProblem().contains("+")) {
 			if (difficulty.equalsIgnoreCase("easy")) {
 				fallingSum = (random.nextInt(4)+1) + " + " + (random.nextInt(4)+1);
@@ -514,6 +532,7 @@ public class GameUI {
 				fallingSum = (random.nextInt(499)+1) + " + " + (random.nextInt(499)+1);
 			}
 		}
+		// Creates a random division sum.
 		if (numberProblem.getProblem().contains("/")) {
 			if (difficulty.equalsIgnoreCase("easy")) {
 				int leftOperator = random.nextInt(9) + 1;
@@ -534,6 +553,7 @@ public class GameUI {
 				fallingSum = String.valueOf(total) + " / " + String.valueOf(rightOperator);
 			}
 		}
+		// Creates a random multiplication sum.
 		if (numberProblem.getProblem().contains("*")) {
 			if (difficulty.equalsIgnoreCase("easy")) {
 				fallingSum = (random.nextInt(4)+1) + " * " + (random.nextInt(4)+1);
@@ -545,6 +565,7 @@ public class GameUI {
 				fallingSum = (random.nextInt(9)+1) + " * " + (random.nextInt(14)+1);
 			}
 		}
+		// Creates a random subtraction sum.
 		if (numberProblem.getProblem().contains("-")) {
 			if (difficulty.equalsIgnoreCase("easy")) {
 				int firstNumber = random.nextInt(9)+1;
