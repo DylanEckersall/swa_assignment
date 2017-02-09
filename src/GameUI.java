@@ -105,11 +105,17 @@ public class GameUI {
 						firstNumber = matcher.group(1);
 						secondNumber = matcher2.group(1);
 					}
-					if (problemType.equalsIgnoreCase("addition")) {
+					if (numberProblem.getProblem().contains("+")) {
 						sum = Integer.parseInt(firstNumber) + Integer.parseInt(secondNumber);
 					}
-					if (problemType.equalsIgnoreCase("division")) {
+					if (numberProblem.getProblem().contains("/")) {
 						sum = Integer.parseInt(firstNumber) / Integer.parseInt(secondNumber);
+					}
+					if (numberProblem.getProblem().contains("*")) {
+						sum = Integer.parseInt(firstNumber) * Integer.parseInt(secondNumber);
+					}
+					if (numberProblem.getProblem().contains("-")) {
+						sum = Integer.parseInt(firstNumber) - Integer.parseInt(secondNumber);
 					}
 					if (sum == (int) numberProblem.getAnswer()) {
 						correctAnswer = true;
@@ -393,7 +399,7 @@ public class GameUI {
 		if (problemType.equalsIgnoreCase("mixed")) {
 			int type = 0;
 			Random random = new Random();
-			type = random.nextInt(3) + 1;
+			type = (random.nextInt(3) + 1);
 			if (type == 1) {
 				numberProblem = numberProblemFactory.createNumberProblem("addition");
 			}
@@ -420,6 +426,7 @@ public class GameUI {
 		// Sets the text of the associated labels.
 		answerLabel.setText(String.valueOf((int)numberProblem.getAnswer()));
 	}
+	
 	
 	/**
 	 * Generates a falling number based on difficulty and type.
@@ -459,8 +466,37 @@ public class GameUI {
 				fallingSum = String.valueOf(total) + " / " + String.valueOf(rightOperator);
 			}
 		}
+		if (numberProblem.getProblem().contains("*")) {
+			if (difficulty.equalsIgnoreCase("easy")) {
+				fallingSum = (random.nextInt(4)+1) + " * " + (random.nextInt(4)+1);
+			}
+			if (difficulty.equalsIgnoreCase("medium")) {
+				fallingSum = (random.nextInt(9)+1) + " * " + (random.nextInt(9)+1);
+			}
+			if (difficulty.equalsIgnoreCase("hard")) {
+				fallingSum = (random.nextInt(9)+1) + " * " + (random.nextInt(14)+1);
+			}
+		}
+		if (numberProblem.getProblem().contains("-")) {
+			if (difficulty.equalsIgnoreCase("easy")) {
+				int firstNumber = random.nextInt(9)+1;
+				int secondNumber = random.nextInt(9)+1;
+				fallingSum = String.valueOf(Math.max(firstNumber, secondNumber)) + " - " + String.valueOf(Math.min(firstNumber, secondNumber));
+			}
+			if (difficulty.equalsIgnoreCase("medium")) {
+				int firstNumber = random.nextInt(99)+1;
+				int secondNumber = random.nextInt(99)+1;
+				fallingSum = String.valueOf(Math.max(firstNumber, secondNumber)) + " - " + String.valueOf(Math.min(firstNumber, secondNumber));
+			}
+			if (difficulty.equalsIgnoreCase("hard")) {
+				int firstNumber = random.nextInt(499)+1;
+				int secondNumber = random.nextInt(499)+1;
+				fallingSum = String.valueOf(Math.max(firstNumber, secondNumber)) + " - " + String.valueOf(Math.min(firstNumber, secondNumber));
+			}
+		}
 		return fallingSum;
 	}
+	
 	
 	/**
 	 * Ends the current game.
