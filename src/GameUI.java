@@ -39,6 +39,63 @@ public class GameUI {
 	private String problemType;
 	private Timeline timeline;
 	private Timer timer;
+	// Creates a new timertask representing a clock timer.
+	private TimerTask timerTask = new TimerTask() {
+		public void run() {
+			Platform.runLater(new Runnable() {
+				public void run() {
+					timeTaken += 1;
+					timerLabel.setText(String.valueOf(timeTaken));
+				}
+			});
+		}
+	};
+	// Creates a new timertask for checking if the correct answer exists in the ArrayList.
+	 private TimerTask checkAnswerIsFalling = new TimerTask() {
+		public void run() {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						Random random = new Random();
+						Label number = new Label(numberProblem.getProblem());
+						number.setLayoutY(75);
+						number.setLayoutX(random.nextInt(750) + 1);
+						number.setStyle("-fx-font-size: 18px");
+						content.getChildren().add(number);
+						fallingSums.add(number);
+						Timeline timeline = new Timeline(60);
+						timeline.setCycleCount(1);
+						timelines.add(timeline);
+						KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
+						KeyFrame keyFrame = new KeyFrame(fallingDuration, keyValue);
+						timeline.getKeyFrames().add(keyFrame);
+						timeline.play();
+					}
+				});
+			}
+	};
+	// Creates a new timertask for generating falling numbers.
+	private TimerTask createFallingNumber = new TimerTask() {
+		public void run() {
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Random random = new Random();
+					Label number = new Label(generateFallingNumber());
+					number.setLayoutY(75);
+					number.setLayoutX(random.nextInt(750) + 1);
+					number.setStyle("-fx-font-size: 18px");
+					content.getChildren().add(number);
+					fallingSums.add(number);
+					Timeline timeline = new Timeline(60);
+					timelines.add(timeline);
+					KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
+					KeyFrame keyFrame = new KeyFrame(fallingDuration, keyValue);
+					timeline.setCycleCount(1);
+					timeline.getKeyFrames().add(keyFrame);
+					timeline.play();
+				}
+			});
+		}
+	};
 	private NumberProblem numberProblem;
 	private Label answerLabel;
 	private Label timerLabel;
@@ -52,6 +109,7 @@ public class GameUI {
 	private ArrayList<Label> fallingSums; 
 	private ArrayList<Label> toDelete;
 	private ArrayList<KeyFrame> keyFrames;
+	private ArrayList<Timeline> timelines;
 	private int health;
 	private NumberCatcher numberCatcher;
 	private NumberProblemFactory numberProblemFactory;
@@ -141,7 +199,6 @@ public class GameUI {
 					System.out.println("True");
 					generateNumberProblem();
 					fallingDuration = fallingDuration.subtract(Duration.millis(250));
-					System.out.println(fallingDuration.toString());
 					if (timeTaken < 10) {
 						score += 50;
 						scoreLabel.setText("Score: " + String.valueOf(score));
@@ -202,6 +259,7 @@ public class GameUI {
 		fallingSums = new ArrayList<Label>();
 		keyFrames = new ArrayList<KeyFrame>();
 		toDelete = new ArrayList<Label>();
+		timelines = new ArrayList<Timeline>();
 		intersectFlag = false;
 		settingsButton = new Button("Settings");
 		numberProblemFactory = new NumberProblemFactory();
@@ -214,68 +272,10 @@ public class GameUI {
 		content.getChildren().add(answerLabel);
 		// Creates the number problem for the game.
 		generateNumberProblem();
-		System.out.println(numberProblem.getProblem());
-		System.out.println(numberProblem.getAnswer());
-		// Creates a new timertask for checking if the correct answer exists in the ArrayList.
-		 TimerTask checkAnswerIsFalling = new TimerTask() {
-			public void run() {
-					Platform.runLater(new Runnable() {
-						public void run() {
-							Random random = new Random();
-							Label number = new Label(numberProblem.getProblem());
-							number.setLayoutY(75);
-							number.setLayoutX(random.nextInt(750) + 1);
-							number.setStyle("-fx-font-size: 18px");
-							content.getChildren().add(number);
-							fallingSums.add(number);
-							Timeline timeline = new Timeline(60);
-							timeline.setCycleCount(1);
-							KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
-							KeyFrame keyFrame = new KeyFrame(fallingDuration, keyValue);
-							timeline.getKeyFrames().add(keyFrame);
-							timeline.play();
-						}
-					});
-				}
-		};
-		// Sets the task to run every 10 seconds.
+		// Sets the task to check answer exists task to run every 10 seconds.
 		timer.scheduleAtFixedRate(checkAnswerIsFalling, 10000, 10000);
-		// Creates a new timertask for generating falling numbers.
-		TimerTask createFallingNumber = new TimerTask() {
-			public void run() {
-				Platform.runLater(new Runnable() {
-					public void run() {
-						Random random = new Random();
-						Label number = new Label(generateFallingNumber());
-						number.setLayoutY(75);
-						number.setLayoutX(random.nextInt(750) + 1);
-						number.setStyle("-fx-font-size: 18px");
-						content.getChildren().add(number);
-						fallingSums.add(number);
-						Timeline timeline = new Timeline(60);
-						KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
-						KeyFrame keyFrame = new KeyFrame(fallingDuration, keyValue);
-						timeline.setCycleCount(1);
-						timeline.getKeyFrames().add(keyFrame);
-						timeline.play();
-					}
-				});
-			}
-		};
-		// Sets the task to run every 3 seconds.
+		// Sets the create falling number task to run every 3 seconds.
 		timer.scheduleAtFixedRate(createFallingNumber, 1, 3000);
-		// Creates a timer task to represent a timer.
-		TimerTask timerTask = new TimerTask() {
-			public void run() {
-				Platform.runLater(new Runnable() {
-					public void run() {
-						timeTaken += 1;
-						timerLabel.setText(String.valueOf(timeTaken));
-						System.out.println(timeTaken);
-					}
-				});
-			}
-		};
 		// Sets the timer task to run every second.
 		timer.scheduleAtFixedRate(timerTask, 0, 1000);
 		// Adds UI buttons to the toolbar.
@@ -358,23 +358,91 @@ public class GameUI {
 	 * Pauses the game.
 	 */
 	public void pauseGame() {
-		try {
-			this.wait();
+		for (Timeline timeline : timelines) {
+			timeline.pause();
 		}
-		catch (Exception exception) {
-			exception.printStackTrace();
-		}
+		animationTimer.stop();
+		timer.cancel();
+		pauseButton.setDisable(true);
+		resumeButton.setDisable(false);
+		isPaused = true;
 	}
 	
 	/**
 	 * Resumes the game.
 	 */
 	public void resumeGame() {
-		timeline.play();
+		for (Timeline timeline : timelines) {
+			timeline.play();
+		}
 		animationTimer.start();
+		// Creates a new timer since the old one has been cancelled.
+		timer = new Timer();
+		// Recreates the timer tasks, since the old ones cannot be re-used.
+		timerTask = new TimerTask() {
+			public void run() {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						timeTaken += 1;
+						timerLabel.setText(String.valueOf(timeTaken));
+					}
+				});
+			}
+		};
+		// Creates a new timertask for checking if the correct answer exists in the ArrayList.
+		 checkAnswerIsFalling = new TimerTask() {
+			public void run() {
+					Platform.runLater(new Runnable() {
+						public void run() {
+							Random random = new Random();
+							Label number = new Label(numberProblem.getProblem());
+							number.setLayoutY(75);
+							number.setLayoutX(random.nextInt(750) + 1);
+							number.setStyle("-fx-font-size: 18px");
+							content.getChildren().add(number);
+							fallingSums.add(number);
+							Timeline timeline = new Timeline(60);
+							timeline.setCycleCount(1);
+							timelines.add(timeline);
+							KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
+							KeyFrame keyFrame = new KeyFrame(fallingDuration, keyValue);
+							timeline.getKeyFrames().add(keyFrame);
+							timeline.play();
+						}
+					});
+				}
+		};
+		// Creates a new timertask for generating falling numbers.
+		createFallingNumber = new TimerTask() {
+			public void run() {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						Random random = new Random();
+						Label number = new Label(generateFallingNumber());
+						number.setLayoutY(75);
+						number.setLayoutX(random.nextInt(750) + 1);
+						number.setStyle("-fx-font-size: 18px");
+						content.getChildren().add(number);
+						fallingSums.add(number);
+						Timeline timeline = new Timeline(60);
+						timelines.add(timeline);
+						KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
+						KeyFrame keyFrame = new KeyFrame(fallingDuration, keyValue);
+						timeline.setCycleCount(1);
+						timeline.getKeyFrames().add(keyFrame);
+						timeline.play();
+					}
+				});
+			}
+		};
+		// Sets the task to check answer exists task to run every 10 seconds.
+		timer.scheduleAtFixedRate(checkAnswerIsFalling, 10000, 10000);
+		// Sets the create falling number task to run every 3 seconds.
+		timer.scheduleAtFixedRate(createFallingNumber, 1500, 3000);
+		// Sets the timer task to run every second.
+		timer.scheduleAtFixedRate(timerTask, 0, 1000);
 		pauseButton.setDisable(false);
 		resumeButton.setDisable(true);
-		content.setOnKeyPressed(kEventHandler);
 		isPaused = false;
 	}
 	
