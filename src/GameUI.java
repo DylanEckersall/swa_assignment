@@ -4,11 +4,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.event.ChangeEvent;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.collections.SetChangeListener.Change;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -246,10 +250,6 @@ public class GameUI {
 					intersectFlag = false;
 				}
 			}
-			// If the players health gets to 0.
-			if (progressBar.getProgress() <= 0) {
-				endGame(); // Ends the game.
-			}
 		}
 	};
 	
@@ -366,6 +366,38 @@ public class GameUI {
 	 */
 	public void setContent(Pane content) {
 		this.content = content;
+	}
+	
+	/**
+	 * Returns the health label of the UI screen.
+	 * @return the health label.
+	 */
+	public Label getHealthLabel() {
+		return healthLabel;
+	}
+	
+	/**
+	 * Sets the health label of the UI screen.
+	 * @param healthLabel the healthLabel to set.
+	 */
+	public void setHealthLabel(Label healthLabel) {
+		this.healthLabel = healthLabel;
+	}
+	
+	/**
+	 * Returns the users current score.
+	 * @return the users current score.
+	 */
+	public int getScore() {
+		return score;
+	}
+	
+	/**
+	 * Sets the users current score.
+	 * @param score the score to set.
+	 */
+	public void setScore(int score) {
+		this.score = score;
 	}
 	
 	/**
@@ -591,7 +623,8 @@ public class GameUI {
 	 * Ends the current game.
 	 */
 	public void endGame() {
-		
+		SaveHighScoreUI saveHighScoreUI = new SaveHighScoreUI(score);
+		content = new Pane();
 	}
 	
 	

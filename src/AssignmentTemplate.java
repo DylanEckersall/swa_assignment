@@ -1,6 +1,8 @@
 import com.sun.org.apache.xpath.internal.operations.Div;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -8,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -30,9 +33,30 @@ public class AssignmentTemplate extends Application {
 	private ProblemSelectionUI problemSelectionUI;
 	private DifficultyUI difficultyUI;
 	private HighScoresUI highScoresUI;
+	private SaveHighScoreUI saveHighScoreUI;
 	private GameUI gameUI;
   	private String problemType; 
   	private String difficulty;
+  	private ChangeListener<String> playerHealthListener = new ChangeListener<String>() {
+        public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
+           if (Integer.parseInt(newValue) == 0) {
+        	   saveHighScoreUI = new SaveHighScoreUI(gameUI.getScore());
+        	   tab1.setContent(saveHighScoreUI.getContent());
+        	   saveHighScoreUI.getSaveScore().setOnAction(new EventHandler<ActionEvent>() {
+				public void handle(ActionEvent event) {
+					if (saveHighScoreUI.getNameField().getText().length() >= 7) {
+						highScoresUI.insertDatabaseResults(saveHighScoreUI.getNameField().getText().substring(0, 6), gameUI.getScore());
+					}
+					else {
+						highScoresUI.insertDatabaseResults(saveHighScoreUI.getNameField().getText(), gameUI.getScore());
+					}
+					highScoresUI.getDatabaseResults();
+					tab1.setContent(highScoresUI.getContent());
+				}
+			});
+           }
+        }
+	};
 	
 	public static void main(String[] args) {
 			launch(args);
@@ -59,6 +83,7 @@ public class AssignmentTemplate extends Application {
 	  	problemSelectionUI = new ProblemSelectionUI();
 	  	difficultyUI = new DifficultyUI();
 	  	highScoresUI = new HighScoresUI();
+	  	highScoresUI.getDatabaseResults();
 	  	
 	  	// Implements the event handler for the quit button on the main menu.
 	  	mainMenuUI.getQuitButton().setOnAction(new EventHandler<ActionEvent>() {
@@ -134,6 +159,7 @@ public class AssignmentTemplate extends Application {
 				difficulty = "Easy";
 				gameUI = new GameUI(difficulty, problemType);
 				tab1.setContent(gameUI.getContent());
+				gameUI.getHealthLabel().textProperty().addListener(playerHealthListener);
 			}
 		});
 	  	
@@ -143,6 +169,7 @@ public class AssignmentTemplate extends Application {
 				difficulty = "Medium";
 				gameUI = new GameUI(difficulty, problemType);
 				tab1.setContent(gameUI.getContent());
+				gameUI.getHealthLabel().textProperty().addListener(playerHealthListener);
 			}
 		});
 	  	
@@ -152,6 +179,7 @@ public class AssignmentTemplate extends Application {
 				difficulty = "Hard";
 				gameUI = new GameUI(difficulty, problemType);
 				tab1.setContent(gameUI.getContent());
+				gameUI.getHealthLabel().textProperty().addListener(playerHealthListener);
 			}
 		});
 	  	
