@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -40,7 +42,6 @@ public class GameUI {
 	private Timeline timeline;
 	private Timer timer;
 	private NumberProblem numberProblem;
-	private Label numberProblemLabel;
 	private Label answerLabel;
 	private boolean isPaused;
 	private boolean intersectFlag;
@@ -91,13 +92,18 @@ public class GameUI {
 					intersectFlag = true;
 					toDelete.add(label);
 					int sum = 0;
-					for (int i = 0; i < label.getText().length(); i++) {
-						Character character = label.getText().charAt(i);
-						if (Character.isDigit(character)) {
-							sum += Character.getNumericValue(character);
-						}
+					String firstNumber = "";
+					String secondNumber = "";
+					Pattern pattern = Pattern.compile("^([0-9]*)");
+					Pattern pattern2 = Pattern.compile("([0-9]*)$");
+					Matcher matcher = pattern.matcher(label.getText());
+					Matcher matcher2 = pattern2.matcher(label.getText());
+					if (matcher.find() && matcher2.find()) {
+						firstNumber = matcher.group(1);
+						secondNumber = matcher2.group(1);
 					}
-					System.out.println(sum);
+					System.out.println(firstNumber);
+					System.out.println(secondNumber);
 					if (sum == (int) numberProblem.getAnswer()) {
 						correctAnswer = true;
 					}
@@ -153,7 +159,6 @@ public class GameUI {
 		intersectFlag = false;
 		settingsButton = new Button("Settings");
 		numberProblemFactory = new NumberProblemFactory();
-		numberProblemLabel = new Label();
 		timer = new Timer();
 		answerLabel = new Label();
 		answerLabel.setStyle("-fx-font-size: 24px");
@@ -347,7 +352,6 @@ public class GameUI {
 			numberProblem.hardNumberProblem();
 		}
 		// Sets the text of the associated labels.
-		numberProblemLabel.setText(numberProblem.getProblem());
 		answerLabel.setText(String.valueOf((int)numberProblem.getAnswer()));
 	}
 	
@@ -363,10 +367,10 @@ public class GameUI {
 				fallingSum = (random.nextInt(4)+1) + " + " + (random.nextInt(4)+1);
 			}
 			if (difficulty.equalsIgnoreCase("medium")) {
-				fallingSum = random.nextInt(49)+1 + " + " + random.nextInt(49)+1;
+				fallingSum = (random.nextInt(49)+1) + " + " + (random.nextInt(49)+1);
 			}
 			if (difficulty.equalsIgnoreCase("hard")) {
-				fallingSum = random.nextInt(499)+1 + " + " + random.nextInt(499)+1;
+				fallingSum = (random.nextInt(499)+1) + " + " + (random.nextInt(499)+1);
 			}
 		}
 		if (numberProblem.getProblem().contains("/")) {

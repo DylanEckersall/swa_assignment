@@ -41,7 +41,7 @@ public class DivisionNumberProblem extends NumberProblem {
 	/**
 	 * Generates a hard difficulty number problem.
 	 * Hard difficulty will generate a hard problem with a max division
-	 * of 500/10.
+	 * of 500/50.
 	 */
 	public void hardNumberProblem() {
 		int leftOperator = this.getNumberGenerator().nextInt(49) + 1;
