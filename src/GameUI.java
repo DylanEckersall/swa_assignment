@@ -48,6 +48,7 @@ public class GameUI {
 	private double x;
 	private int timeTaken;
 	private int score;
+	private Duration fallingDuration;
 	private ArrayList<Label> fallingSums; 
 	private ArrayList<Label> toDelete;
 	private ArrayList<KeyFrame> keyFrames;
@@ -107,6 +108,9 @@ public class GameUI {
 					if (problemType.equalsIgnoreCase("addition")) {
 						sum = Integer.parseInt(firstNumber) + Integer.parseInt(secondNumber);
 					}
+					if (problemType.equalsIgnoreCase("division")) {
+						sum = Integer.parseInt(firstNumber) / Integer.parseInt(secondNumber);
+					}
 					if (sum == (int) numberProblem.getAnswer()) {
 						correctAnswer = true;
 					}
@@ -124,8 +128,14 @@ public class GameUI {
 			toDelete.clear();
 			if (intersectFlag == true) {
 				if (correctAnswer) {
+					for (Label label2 : fallingSums) {
+						content.getChildren().remove(label2);
+					}
+					fallingSums.clear();
 					System.out.println("True");
 					generateNumberProblem();
+					fallingDuration = fallingDuration.subtract(Duration.millis(250));
+					System.out.println(fallingDuration.toString());
 					if (timeTaken < 10) {
 						score += 50;
 						scoreLabel.setText("Score: " + String.valueOf(score));
@@ -153,7 +163,7 @@ public class GameUI {
 					}
 					progressBar.setProgress(progressBar.getProgress() + .10);
 				}
-				else {
+				else if (!correctAnswer) {
 					progressBar.setProgress(progressBar.getProgress() - .10);
 					healthLabel.setText(String.valueOf((int)(progressBar.getProgress() * 100)));
 					intersectFlag = false;
@@ -174,6 +184,7 @@ public class GameUI {
 		health = 100;
 		timeTaken = 0;
 		score = 0;
+		fallingDuration = Duration.seconds(10);
 		this.difficulty = difficulty;
 		this.problemType = problemType;
 		content = new Pane();
@@ -214,7 +225,7 @@ public class GameUI {
 							Timeline timeline = new Timeline(60);
 							timeline.setCycleCount(1);
 							KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
-							KeyFrame keyFrame = new KeyFrame(Duration.seconds(10), keyValue);
+							KeyFrame keyFrame = new KeyFrame(fallingDuration, keyValue);
 							timeline.getKeyFrames().add(keyFrame);
 							timeline.play();
 						}
@@ -237,7 +248,7 @@ public class GameUI {
 						fallingSums.add(number);
 						Timeline timeline = new Timeline(60);
 						KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
-						KeyFrame keyFrame = new KeyFrame(Duration.seconds(10), keyValue);
+						KeyFrame keyFrame = new KeyFrame(fallingDuration, keyValue);
 						timeline.setCycleCount(1);
 						timeline.getKeyFrames().add(keyFrame);
 						timeline.play();
@@ -308,7 +319,7 @@ public class GameUI {
 		scoreLabel = new Label("Score: " + String.valueOf(score));
 		scoreLabel.setStyle("-fx-font-size: 20px");
 		scoreLabel.setLayoutY(50);
-		scoreLabel.setLayoutX(700);
+		scoreLabel.setLayoutX(650);
 		content.getChildren().add(scoreLabel);
 		// Styling and positioning of the health icon and health number.
 		healthIcon.setLayoutY(540);
