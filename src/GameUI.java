@@ -4,13 +4,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -43,10 +41,13 @@ public class GameUI {
 	private Timer timer;
 	private NumberProblem numberProblem;
 	private Label answerLabel;
+	private Label timerLabel;
+	private Label scoreLabel;
 	private boolean isPaused;
 	private boolean intersectFlag;
 	private double x;
 	private int timeTaken;
+	private int score;
 	private ArrayList<Label> fallingSums; 
 	private ArrayList<Label> toDelete;
 	private ArrayList<KeyFrame> keyFrames;
@@ -90,6 +91,7 @@ public class GameUI {
 				if (label.getShape().intersects(numberCatcher.getRectangle().getX(), numberCatcher.getRectangle().getY(),
 						numberCatcher.getRectangle().getWidth(), numberCatcher.getRectangle().getHeight()) && fallingSums.contains(label)) {
 					intersectFlag = true;
+					content.getChildren().remove(label);
 					toDelete.add(label);
 					int sum = 0;
 					String firstNumber = "";
@@ -102,8 +104,9 @@ public class GameUI {
 						firstNumber = matcher.group(1);
 						secondNumber = matcher2.group(1);
 					}
-					System.out.println(firstNumber);
-					System.out.println(secondNumber);
+					if (problemType.equalsIgnoreCase("addition")) {
+						sum = Integer.parseInt(firstNumber) + Integer.parseInt(secondNumber);
+					}
 					if (sum == (int) numberProblem.getAnswer()) {
 						correctAnswer = true;
 					}
@@ -123,6 +126,31 @@ public class GameUI {
 				if (correctAnswer) {
 					System.out.println("True");
 					generateNumberProblem();
+					if (timeTaken < 10) {
+						score += 50;
+						scoreLabel.setText("Score: " + String.valueOf(score));
+						timeTaken = 0;
+					}
+					if (timeTaken >= 10 && timeTaken < 20) {
+						score += 40;
+						scoreLabel.setText("Score: " + String.valueOf(score));
+						timeTaken = 0;
+					}
+					if (timeTaken >= 20 && timeTaken < 30) {
+						score += 30;
+						scoreLabel.setText("Score: " + String.valueOf(score));
+						timeTaken = 0;
+					}
+					if (timeTaken >= 30 && timeTaken < 40) {
+						score += 20;
+						scoreLabel.setText("Score: " + String.valueOf(score));
+						timeTaken = 0;
+					}
+					if (timeTaken >= 40) {
+						score += 10;
+						scoreLabel.setText("Score: " + String.valueOf(score));
+						timeTaken = 0;
+					}
 					progressBar.setProgress(progressBar.getProgress() + .10);
 				}
 				else {
@@ -145,6 +173,7 @@ public class GameUI {
 		isPaused = false;
 		health = 100;
 		timeTaken = 0;
+		score = 0;
 		this.difficulty = difficulty;
 		this.problemType = problemType;
 		content = new Pane();
@@ -177,11 +206,13 @@ public class GameUI {
 						public void run() {
 							Random random = new Random();
 							Label number = new Label(numberProblem.getProblem());
+							number.setLayoutY(75);
 							number.setLayoutX(random.nextInt(750) + 1);
 							number.setStyle("-fx-font-size: 18px");
 							content.getChildren().add(number);
 							fallingSums.add(number);
 							Timeline timeline = new Timeline(60);
+							timeline.setCycleCount(1);
 							KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
 							KeyFrame keyFrame = new KeyFrame(Duration.seconds(10), keyValue);
 							timeline.getKeyFrames().add(keyFrame);
@@ -199,6 +230,7 @@ public class GameUI {
 					public void run() {
 						Random random = new Random();
 						Label number = new Label(generateFallingNumber());
+						number.setLayoutY(75);
 						number.setLayoutX(random.nextInt(750) + 1);
 						number.setStyle("-fx-font-size: 18px");
 						content.getChildren().add(number);
@@ -206,6 +238,7 @@ public class GameUI {
 						Timeline timeline = new Timeline(60);
 						KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
 						KeyFrame keyFrame = new KeyFrame(Duration.seconds(10), keyValue);
+						timeline.setCycleCount(1);
 						timeline.getKeyFrames().add(keyFrame);
 						timeline.play();
 					}
@@ -217,8 +250,13 @@ public class GameUI {
 		// Creates a timer task to represent a timer.
 		TimerTask timerTask = new TimerTask() {
 			public void run() {
-				timeTaken += 1;
-				System.out.println(timeTaken);
+				Platform.runLater(new Runnable() {
+					public void run() {
+						timeTaken += 1;
+						timerLabel.setText(String.valueOf(timeTaken));
+						System.out.println(timeTaken);
+					}
+				});
 			}
 		};
 		// Sets the timer task to run every second.
@@ -255,6 +293,23 @@ public class GameUI {
 		});
 		// Creates an image for the players health icon.
 		ImageView healthIcon = new ImageView(new Image(GameUI.class.getResource("resources/health_icon.png").toExternalForm()));
+		// Creates an image for the timer icon.
+		ImageView timerIcon = new ImageView(new Image(GameUI.class.getResource("resources/alarm-clock.png").toExternalForm()));
+		timerIcon.setX(10);
+		timerIcon.setY(50);
+		content.getChildren().add(timerIcon);
+		// Creates a label representing the timer
+		timerLabel = new Label("0");
+		timerLabel.setStyle("-fx-font-size: 24px");
+		timerLabel.setLayoutX(40);
+		timerLabel.setLayoutY(50);
+		content.getChildren().add(timerLabel);
+		// Creates a new label representing the score.
+		scoreLabel = new Label("Score: " + String.valueOf(score));
+		scoreLabel.setStyle("-fx-font-size: 20px");
+		scoreLabel.setLayoutY(50);
+		scoreLabel.setLayoutX(700);
+		content.getChildren().add(scoreLabel);
 		// Styling and positioning of the health icon and health number.
 		healthIcon.setLayoutY(540);
 		healthIcon.setLayoutX(10);
