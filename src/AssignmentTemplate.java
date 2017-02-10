@@ -1,20 +1,12 @@
-import com.sun.org.apache.xpath.internal.operations.Div;
-
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -41,6 +33,12 @@ public class AssignmentTemplate extends Application {
         public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
            if (Integer.parseInt(newValue) == 0) {
         	   saveHighScoreUI = new SaveHighScoreUI(gameUI.getScore());
+	       	  	// Implements the event handler for the main menu button on the help screen.
+	       	  	saveHighScoreUI.getDontSaveScore().setOnAction(new EventHandler<ActionEvent>() {
+	       			public void handle(ActionEvent event) {
+	       				tab1.setContent(mainMenuUI.getContent());
+	       			}
+	       		});
         	   tab1.setContent(saveHighScoreUI.getContent());
         	   saveHighScoreUI.getSaveScore().setOnAction(new EventHandler<ActionEvent>() {
 				public void handle(ActionEvent event) {
@@ -108,6 +106,13 @@ public class AssignmentTemplate extends Application {
 	  	
 	  	// Implements the event handler for the main menu button on the help screen.
 	  	helpScreenUI.getMainMenuButton().setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				tab1.setContent(mainMenuUI.getContent());
+			}
+		});
+	  	
+	  	// Implements the event handler for the main menu button on the high scores screen.
+	  	highScoresUI.getReturnToMenu().setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				tab1.setContent(mainMenuUI.getContent());
 			}
@@ -197,6 +202,11 @@ public class AssignmentTemplate extends Application {
 	  	tab2.setClosable(false);
 	  	tab2.setContent(highScoresUI.getContent());
 	  	root.getTabs().add(tab2);
+	  	
+	  	// Adds an audio clip to the background.
+	  	AudioClip audioClip = new AudioClip(AssignmentTemplate.class.getResource("resources/bensound-scifi.mp3").toExternalForm());
+	  	audioClip.setCycleCount(audioClip.INDEFINITE);
+	  	audioClip.play();
 	  	
 	  	// Stops timers from running when the application has been closed.
 	  	stage.setOnCloseRequest(new EventHandler<WindowEvent>() {

@@ -1,6 +1,13 @@
+import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -47,6 +54,13 @@ public class SaveHighScoreUI {
 		saveScoreLabel.setLayoutY(100);
 		saveScoreLabel.setLayoutX(150);
 		content.getChildren().addAll(highScoreLabel, scoreLabel, saveScoreLabel, saveScore, dontSaveScore, nameField);
+		// Creates and adds a new background image to the save high score screen.
+		Image image = new Image(GameUI.class.getResource("resources/background.jpg").toExternalForm());
+		BackgroundPosition backgroundPosition = new BackgroundPosition(Side.LEFT, 0, false, Side.TOP, 0, false);
+		BackgroundSize backgroundSize = new BackgroundSize(800, 600, false, false, true, true);
+		BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, backgroundPosition, backgroundSize);
+		Background background = new Background(backgroundImage);
+		content.setBackground(background);
 	}
 
 	/**

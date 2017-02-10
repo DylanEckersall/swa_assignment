@@ -65,6 +65,11 @@ public class GameUI {
 						content.getChildren().add(number);
 						fallingSums.add(number);
 						Timeline timeline = new Timeline(60);
+						timeline.setOnFinished(new EventHandler<ActionEvent>() {
+							public void handle(ActionEvent event) {
+								timeline.stop();
+							}
+						});
 						timeline.setCycleCount(1); // CycleCount set to 1 for garbage collection.
 						timelines.add(timeline); // Timeline added to array which is used for pause method.
 						KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
@@ -89,6 +94,11 @@ public class GameUI {
 					content.getChildren().add(number);
 					fallingSums.add(number);
 					Timeline timeline = new Timeline(60);
+					timeline.setOnFinished(new EventHandler<ActionEvent>() {
+						public void handle(ActionEvent event) {
+							timeline.stop();
+						}
+					});
 					timelines.add(timeline);
 					KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
 					KeyFrame keyFrame = new KeyFrame(fallingDuration, keyValue);
@@ -288,8 +298,8 @@ public class GameUI {
 		generateNumberProblem();
 		// Sets the task to check answer exists task to run every 10 seconds.
 		timer.scheduleAtFixedRate(checkAnswerIsFalling, 10000, 10000);
-		// Sets the create falling number task to run every 3 seconds.
-		timer.scheduleAtFixedRate(createFallingNumber, 1, 3000);
+		// Sets the create falling number task to run every 2 seconds.
+		timer.scheduleAtFixedRate(createFallingNumber, 1, 2500);
 		// Sets the timer task to run every second.
 		timer.scheduleAtFixedRate(timerTask, 0, 1000);
 		// Adds UI buttons to the toolbar.
@@ -450,6 +460,11 @@ public class GameUI {
 							content.getChildren().add(number);
 							fallingSums.add(number);
 							Timeline timeline = new Timeline(60);
+							timeline.setOnFinished(new EventHandler<ActionEvent>() {
+								public void handle(ActionEvent event) {
+									timeline.stop();
+								}
+							});
 							timeline.setCycleCount(1);
 							timelines.add(timeline);
 							KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
@@ -473,6 +488,11 @@ public class GameUI {
 						content.getChildren().add(number);
 						fallingSums.add(number);
 						Timeline timeline = new Timeline(60);
+						timeline.setOnFinished(new EventHandler<ActionEvent>() {
+							public void handle(ActionEvent event) {
+								timeline.stop();
+							}
+						});
 						timelines.add(timeline);
 						KeyValue keyValue = new KeyValue(number.layoutYProperty(), 800);
 						KeyFrame keyFrame = new KeyFrame(fallingDuration, keyValue);
@@ -485,8 +505,8 @@ public class GameUI {
 		};
 		// Sets the task to check answer exists task to run every 10 seconds.
 		timer.scheduleAtFixedRate(checkAnswerIsFalling, 10000, 10000);
-		// Sets the create falling number task to run every 3 seconds.
-		timer.scheduleAtFixedRate(createFallingNumber, 1500, 3000);
+		// Sets the create falling number task to run every 2 seconds.
+		timer.scheduleAtFixedRate(createFallingNumber, 1500, 2000);
 		// Sets the timer task to run every second.
 		timer.scheduleAtFixedRate(timerTask, 0, 1000);
 		pauseButton.setDisable(false);
